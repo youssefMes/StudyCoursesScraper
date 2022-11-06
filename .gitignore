@@ -1,3 +1,9 @@
 .idea/
 .DS_Store
 data/
+scraper/*.json
+__pycache__/
+*.py[cod]
+# Django:
+*.log
+*.pot
