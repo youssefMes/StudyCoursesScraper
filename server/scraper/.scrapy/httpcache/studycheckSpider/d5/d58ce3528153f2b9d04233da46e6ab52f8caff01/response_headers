@@ -1,0 +1,10 @@
+Content-Length: 61
+Date: Fri, 18 Nov 2022 12:52:32 GMT
+Server: Apache
+Cache-Control: no-cache, private
+Cache-Control: max-age=14400
+Set-Cookie: oak_session=%7B%22user_country_id%22%3A1%7D; path=/
+Expires: Fri, 18 Nov 2022 16:52:32 GMT
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Type: text/plain; charset=UTF-8
