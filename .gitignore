@@ -2,6 +2,7 @@
 .DS_Store
 data/
 scraper/*.json
+scraper/.scrapy/
 __pycache__/
 *.py[cod]
 # Django:

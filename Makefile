@@ -1,5 +1,6 @@
 start:
 	@docker-compose up -d --build --remove-orphans
+	@python3 manage.py runserver 0.0.0.0:8000
 stop:
 	@docker-compose down -v
 logs:

@@ -1,11 +1,14 @@
 from django.db import models
 
 class Information(models.Model):
-    university = models.CharField(max_length=30)
-    city = models.CharField(max_length=30)
-    form = models.CharField(max_length=30, null=True)
-    study_start = models.CharField(max_length=30, null=True)
-    study_form = models.CharField(max_length=30, null=True)
+    university = models.CharField(max_length=100)
+    description = models.TextField(null=True)
+    city = models.CharField(max_length=100)
+    study_start = models.CharField(max_length=100, null=True)
+    study_form = models.CharField(max_length=100, null=True)
+    study_periode = models.CharField(max_length=100, null=True)
+    degree = models.CharField(max_length=100, null=True)
+    languages = models.CharField(max_length=100, null=True)
     other_informations = models.JSONField(null=True)
 
 class Rating(models.Model):
@@ -36,6 +39,7 @@ class History(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
+    link = models.CharField(max_length=100)
     portal = models.ForeignKey(
         'Portal',
         on_delete=models.CASCADE,
@@ -51,3 +55,4 @@ class Course(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
+    created_at = models.DateTimeField(auto_now_add=True)

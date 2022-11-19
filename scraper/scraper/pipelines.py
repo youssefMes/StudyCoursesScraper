@@ -6,9 +6,10 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-from scraperApp.models import Course
+from scraperApp.models import Course, Information
 from asgiref.sync import sync_to_async
 from scraperApp.models import Portal
+import pprint
 
 
 def clean_name(param):
@@ -37,9 +38,15 @@ class ScraperPipeline(object):
     @sync_to_async
     def process_item(self, item, spider):
         portal = Portal.objects.get(name=getattr(spider, 'portal_name'))
+        pp = pprint.PrettyPrinter(depth=2)
+        pp.pprint(item)
+        information = {}
+        if 'information' in item.keys():
+            information = Information.objects.create(**item['information'])
         Course.objects.create(
             name=item['name'],
-            portal=portal
+            portal=portal,
+            information=information
         )
 
         return item
