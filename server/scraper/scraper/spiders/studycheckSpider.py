@@ -13,10 +13,23 @@ class StudycheckspiderSpider(Spider):
     allowed_domains = ['www.studycheck.de']
     start_urls = ['https://www.studycheck.de/suche?rt=2&q=&c=1&modal=1']
     portal_name = 'studyCheck'
+    mapping = {
+        'Regelstudienzeit': 'study_periode',
+        'Studienbeginn': 'study_start',
+        'Abschluss': 'degree',
+        'Unterrichtssprachen': 'languages',
+        'Inhalte': 'contents',
+        'Standorte': 'city',
+        'Link zur Website': 'website_link',
+        'Gesamtkosten': 'costs',
+        'Creditpoints': 'credit_points',
+    }
+    course = {}
+    
     def parse(self, response):
-      for course in response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex')[0:1]:
+      for course in response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex')[0:10]:
         url = course.css('a::attr(href)').extract_first()
-        yield Request('https://www.studycheck.de/studium/medieninformatik/lmu-muenchen-9392', callback = self.parse_item_informations)
+        yield Request(url, callback = self.parse_item_informations)
     
     def parse_item_informations(self, response):
         cards = response.xpath(
@@ -48,9 +61,9 @@ class StudycheckspiderSpider(Spider):
         
         informations = {}
         match blocTitle:
-            case 'Vollzeitstudium':
+            case 'Vollzeitstudium' | 'Berufsbegleitendes Studium' | 'Duales Studium':
                 informations = {
-                    'study_form': 'Vollzeitstudium',
+                    'study_form': blocTitle,
                     **self.parse_card_informations(card)
                 }
             case 'Studiengangdetails':
@@ -59,17 +72,22 @@ class StudycheckspiderSpider(Spider):
                     informations = self.parse_card_informations(card)
                 else:
                     informations = {**informations, 'description': description}
+            case 'Studienmodelle':
+                informations['models'] = self.parse_models(card=card.xpath('div[@class="card-block"]')[0])
         return informations
 
-    @staticmethod
-    def parse_card_informations(card):
+    def parse_card_informations(self, card):
         informationDivs = card.xpath("//div[contains(@class, 'card-row') and contains(@class, 'card-row--no-border')]")
         mapping = {
             'Regelstudienzeit': 'study_periode',
             'Studienbeginn': 'study_start',
             'Abschluss': 'degree',
             'Unterrichtssprachen': 'languages',
+            'Inhalte': 'contents',
             'Standorte': 'city',
+            'Link zur Website': 'website_link',
+            'Gesamtkosten': 'costs',
+            'Creditpoints': 'credit_points',
         }
         excluded = ['Bewertung', 'Bewertungen', 'Weiterempfehlung']
         informations = {}
@@ -85,9 +103,44 @@ class StudycheckspiderSpider(Spider):
 
             if label in mapping:    
                 informations[mapping[label]] = value
-                continue
-            if 'other_informations' not in informations:
-                informations['other_informations'] = {}
-            informations['other_informations'][label] = value
         
         return informations
+
+    def parse_models(self, card):
+        headers = card.xpath("//div[@class='variant-accordion-header']")
+        informationDivs = card.xpath("div/div[contains(@class, 'tab-content')]")
+        modelsInformations = []
+        for index, header in enumerate(headers):    
+            informations = {
+                'name': header.xpath("normalize-space(span[contains(@class, 'variant-accordion-header__title')])").extract_first(),
+                'duration': header.xpath("normalize-space(span[contains(@class, 'variant-accordion-header__duration')])").extract_first(),
+                'price': header.xpath("normalize-space(span[contains(@class, 'variant-accordion-header__price')])").extract_first()
+            }
+            contentDiv = informationDivs[index]
+            rows = contentDiv.xpath("div[contains(@class, 'card-row') and contains(@class, 'card-row--no-border')]")
+            mapping = {
+                'Regelstudienzeit': 'study_periode',
+                'Studienbeginn': 'study_start',
+                'Abschluss': 'degree',
+                'Unterrichtssprachen': 'languages',
+                'Inhalte': 'contents',
+                'Standorte': 'city',
+                'Link zur Website': 'website_link',
+                'Gesamtkosten': 'costs',
+                'Hinweise': 'hints',
+                'Creditpoints': 'credit_points',
+            }
+            excluded = ['Bewertung', 'Bewertungen', 'Weiterempfehlung']
+            for row in rows:
+                label = row.xpath("normalize-space(div[contains(@class, 'card-row-label')]//text())").extract_first()
+                if label in excluded:
+                    continue
+                value = ''
+                if label in ['Inhalte', 'Voraussetzungen']:
+                    value = ''.join(row.xpath("div[contains(@class, 'card-row-content')]//*").getall())
+                else:
+                    value = row.xpath("normalize-space(div[contains(@class, 'card-row-content')])").extract_first()
+                informations[mapping[label]] = value
+            modelsInformations.append(informations)  
+        
+        return modelsInformations

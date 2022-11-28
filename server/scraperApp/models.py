@@ -9,7 +9,12 @@ class Information(models.Model):
     study_periode = models.CharField(max_length=100, null=True)
     degree = models.CharField(max_length=100, null=True)
     languages = models.CharField(max_length=100, null=True)
-    other_informations = models.JSONField(null=True)
+    website_link = models.CharField(max_length=100, null=True)
+    credit_points = models.CharField(max_length=50, null=True)
+    costs = models.CharField(max_length=100, null=True)
+    contents = models.TextField(null=True)
+    requirements = models.TextField(null=True)
+    models = models.JSONField(null=True)
 
 class Rating(models.Model):
     class Type(models.TextChoices):
