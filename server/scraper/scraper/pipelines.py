@@ -38,13 +38,14 @@ class ScraperPipeline(object):
     @sync_to_async
     def process_item(self, item, spider):
         portal = Portal.objects.get(name=getattr(spider, 'portal_name'))
-        pp = pprint.PrettyPrinter(depth=2)
-        pp.pprint(item)
+        #pp = pprint.PrettyPrinter(depth=2)
+        #pp.pprint(item)
         information = {}
         if 'information' in item.keys():
             information = Information.objects.create(**item['information'])
         Course.objects.create(
             name=item['name'],
+            link=item['link'],
             portal=portal,
             information=information
         )
