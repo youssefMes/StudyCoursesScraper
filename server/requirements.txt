@@ -3,3 +3,5 @@ psycopg2>=2.8
 djangorestframework
 django-cors-headers
 scrapy
+scrapy_djangoitem
+scrapy-inline-requests

@@ -28,6 +28,7 @@ class StudycheckspiderSpider(Spider):
         'Gesamtkosten': 'costs',
         'Hinweise': 'hints',
         'Creditpoints': 'credit_points',
+        'Voraussetzungen': 'requirements'
     }
     
     def parse(self, response):

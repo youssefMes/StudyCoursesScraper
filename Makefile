@@ -1,10 +1,12 @@
 start:
 	@docker-compose up -d --build --remove-orphans
-	@python3 server/manage.py runserver 0.0.0.0:8000
+	#@python3 server/manage.py runserver 0.0.0.0:8000
 stop:
 	@docker-compose down -v
 logs:
 	@docker-compose logs --tail=100 -f
+
+make spiderrun:
 
 
 # Shell colors.
