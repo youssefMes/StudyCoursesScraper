@@ -1,11 +1,15 @@
-import { LandingPage } from "./components/index";
-import "./App.css";
+import { LandingPage, Results, NavBar } from "./components/index";
+import { Route, BrowserRouter, Routes } from "react-router-dom";
 
 const App = () => {
   return (
-    <div>
-      <LandingPage />
-    </div>
+    <BrowserRouter>
+        <NavBar/>
+        <Routes>
+          <Route path="/" element={<LandingPage/>} />
+          <Route path="/results" element={<Results/>} />
+        </Routes>
+      </BrowserRouter>
   );
 };
 
