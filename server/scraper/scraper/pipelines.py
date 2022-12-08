@@ -6,10 +6,11 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-from scraperApp.models import Course, Information
+from scraperApp.models import Course, Information, Comment
 from asgiref.sync import sync_to_async
 from scraperApp.models import Portal
 import pprint
+import datetime
 
 
 def clean_name(param):
@@ -43,11 +44,19 @@ class ScraperPipeline(object):
         information = {}
         if 'information' in item.keys():
             information = Information.objects.create(**item['information'])
-        Course.objects.create(
+        course = Course.objects.create(
             name=item['name'],
             link=item['link'],
             portal=portal,
             information=information
         )
+
+        if 'comments' in item.keys():
+            entries = []
+            for comment in item['comments']:
+                comment['course'] = course
+                comment['date'] = datetime.datetime.strptime(comment['date'], "%d.%m.%Y").strftime("%Y-%m-%d")
+                entries.append(Comment(**comment))
+            Comment.objects.bulk_create(entries)
 
         return item

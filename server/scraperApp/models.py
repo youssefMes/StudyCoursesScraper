@@ -17,19 +17,29 @@ class Information(models.Model):
     models = models.JSONField(null=True)
 
 class Rating(models.Model):
-    class Type(models.TextChoices):
-        COMMENT = 'comment'
-        PERCENTAGE = 'percentage'
-        STAR = 'star'
-    name = models.CharField(max_length=30)
-    value = models.FloatField()
-    type = models.CharField(
-        max_length=10,
-        choices=Type.choices,
-        default=Type.STAR,
+    class Meta:
+        abstract = True
+    course = models.ForeignKey(
+        'Course',
+        on_delete=models.CASCADE,
     )
-    comment = models.TextField(null=True)
 
+class Comment(Rating):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    star_rating = models.CharField(max_length=5)
+    additional_evaluation = models.JSONField(null=True)
+    date = models.DateField()
+
+class Star(Rating):
+    title = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+    value = models.CharField(max_length=30)
+    report_count = models.IntegerField(null=True)
+
+class Percentage(Rating):
+    title = models.CharField(max_length=30)
+    value = models.CharField(max_length=30)
 
 class Portal(models.Model):
     name = models.CharField(max_length=20)
@@ -49,15 +59,10 @@ class Course(models.Model):
         'Portal',
         on_delete=models.CASCADE,
     )
-    information = models.ForeignKey(
+    information = models.OneToOneField(
         'Information',
         on_delete=models.SET_NULL,
         null=True
-
     )
-    rating = models.ForeignKey(
-        'Rating',
-        on_delete=models.SET_NULL,
-        null=True
-    )
+    evaluation_count = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
