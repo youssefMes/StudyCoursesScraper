@@ -1,13 +1,15 @@
 start:
 	@docker-compose up -d --build --remove-orphans
-	#@python3 server/manage.py runserver 0.0.0.0:8000
+	@docker-compose exec server python manage.py makemigrations
+	@docker-compose exec server python manage.py migrate
+	@docker-compose exec server python manage.py populate_portals
 stop:
 	@docker-compose down -v
 logs:
 	@docker-compose logs --tail=100 -f
 
-make spiderrun:
-
+scrape:
+	@docker-compose exec server bash -c "cd scraper && scrapy crawl studycheckSpider"
 
 # Shell colors.
 RED=\033[0;31m
