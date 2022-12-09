@@ -76,12 +76,15 @@ WSGI_APPLICATION = 'coursesscraper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'djongo',
         'NAME': 'db_name',
-        'USER': 'db_user',
-        'PASSWORD': 'db_password',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'CLIENT': {
+            'host': 'mongodb://mongo:27017',
+            'username': 'db_user',
+            'password': 'db_password',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        }
     }
 }
 

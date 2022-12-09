@@ -14,6 +14,7 @@ class Information(models.Model):
     costs = models.CharField(max_length=100, null=True)
     contents = models.TextField(null=True)
     requirements = models.TextField(null=True)
+    other_information = models.JSONField(null=True)
     models = models.JSONField(null=True)
 
 class Rating(models.Model):

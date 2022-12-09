@@ -10,6 +10,7 @@ logs:
 
 scrape:
 	@docker-compose exec server bash -c "cd scraper && scrapy crawl studycheckSpider"
+	#@docker-compose exec server python manage.py courses_scrapers
 
 # Shell colors.
 RED=\033[0;31m

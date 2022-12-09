@@ -8,6 +8,7 @@ from scrapy.loader import ItemLoader
 from scraper.items import CourseItem
 from pprint import pprint
 from inline_requests import inline_requests
+from re import sub
 
 class StudycheckspiderSpider(Spider):
     name = 'studycheckSpider'
@@ -155,7 +156,11 @@ class StudycheckspiderSpider(Spider):
 
             if label in mapping:    
                 informations[mapping[label]] = value
-        
+            
+            if label not in mapping.keys():
+                    if 'other_information' not in informations.keys():
+                        informations['other_information'] = {}
+                    informations['other_information'][self.to_snake_case(str=label)] = value
         return informations
 
     def parse_models(self, card):
@@ -181,7 +186,19 @@ class StudycheckspiderSpider(Spider):
                     value = ''.join(row.xpath("div[contains(@class, 'card-row-content')]//*").getall())
                 else:
                     value = row.xpath("normalize-space(div[contains(@class, 'card-row-content')])").extract_first()
+                
+                if label not in mapping.keys():    
+                    informations[self.to_snake_case(str=label)] = value
+                    continue
+
                 informations[mapping[label]] = value
             modelsInformations.append(informations)  
         
         return modelsInformations
+    
+    @staticmethod
+    def to_snake_case(str):
+        return '_'.join(
+        sub('([A-Z][a-z]+)', r' \1',
+        sub('([A-Z]+)', r' \1',
+        str.replace('-', ' '))).split()).lower()
