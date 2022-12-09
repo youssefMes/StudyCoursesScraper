@@ -36,5 +36,8 @@ services:
   client:
     container_name: cs_client
     build: ./client
+    volumes:
+      - ./:/client
+      - /node_modules
     ports:
       - 3000:3000
