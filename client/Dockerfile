@@ -6,11 +6,9 @@ EXPOSE 3000
 
 RUN yarn set version berry
 
-COPY package.json .
+COPY ./package.json ./
 
 RUN yarn
-
-COPY . .
 
 RUN yarn rebuild esbuild
 

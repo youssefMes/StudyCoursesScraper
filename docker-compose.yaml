@@ -29,7 +29,7 @@ services:
       - POSTGRES_PASSWORD=db_password
     ports:
       - 8000:8000
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -37,7 +37,6 @@ services:
     container_name: cs_client
     build: ./client
     volumes:
-      - ./:/client
-      - /node_modules
+      - /client/node_modules
     ports:
       - 3000:3000
