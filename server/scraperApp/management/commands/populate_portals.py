@@ -9,6 +9,10 @@ protals = [
     {
         'name': 'studyCheck',
         'link': 'https://www.studycheck.de/suche?rt=2&q=&c=1&modal=1'
+    },
+    {
+        'name': 'studiengaenge.zeit',
+        'link': 'https://studiengaenge.zeit.de/api/search/courses'
     }
 ]
 
