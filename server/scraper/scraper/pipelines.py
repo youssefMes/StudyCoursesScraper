@@ -23,7 +23,7 @@ class ScraperPipeline(object):
             information = Information.objects.create(**item['information'])
         course = Course.objects.create(
             name=item['name'],
-            link=item['link'],
+            link=item['link'] if 'link' in item.keys() else None,
             portal=portal,
             information=information
         )

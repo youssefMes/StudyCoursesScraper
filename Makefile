@@ -2,15 +2,18 @@ start:
 	@docker-compose up -d --build --remove-orphans
 	@docker-compose exec server python manage.py makemigrations
 	@docker-compose exec server python manage.py migrate
-	@docker-compose exec server python manage.py populate_portals
+	@make portals
 stop:
 	@docker-compose down -v
 logs:
 	@docker-compose logs --tail=100 -f
 
+portals:
+	@docker-compose exec server python manage.py populate_portals
 scrape:
-	@docker-compose exec server bash -c "cd scraper && scrapy crawl studycheckSpider"
-	#@docker-compose exec server python manage.py courses_scrapers
+	#@docker-compose exec server bash -c "cd scraper && scrapy crawl studycheckSpider"
+	@docker-compose exec server bash -c "cd scraper && scrapy crawl medienStudierenSpider"
+	#@docker-compose exec server python manage.py courses_scraper
 
 # Shell colors.
 RED=\033[0;31m

@@ -13,6 +13,10 @@ protals = [
     {
         'name': 'studiengaenge.zeit',
         'link': 'https://studiengaenge.zeit.de/api/search/courses'
+    },
+    {
+        'name': 'medien-studieren',
+        'link': 'https://www.medien-studieren.net'
     }
 ]
 

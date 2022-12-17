@@ -54,8 +54,8 @@ class History(models.Model):
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=100)
-    link = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True)
+    link = models.CharField(max_length=200, null=True)
     portal = models.ForeignKey(
         'Portal',
         on_delete=models.CASCADE,
