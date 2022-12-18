@@ -1,5 +1,6 @@
 Django>=4.0
 psycopg2>=2.8
+django-filter
 djangorestframework
 django-cors-headers
 scrapy

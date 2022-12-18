@@ -9,7 +9,7 @@ class Information(models.Model):
     study_periode = models.CharField(max_length=100, null=True)
     degree = models.CharField(max_length=100, null=True)
     languages = models.CharField(max_length=100, null=True)
-    website_link = models.CharField(max_length=200, null=True)
+    website_link = models.CharField(max_length=400, null=True)
     credit_points = models.CharField(max_length=50, null=True)
     costs = models.CharField(max_length=100, null=True)
     contents = models.TextField(null=True)
@@ -55,7 +55,7 @@ class History(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=100, null=True)
-    link = models.CharField(max_length=200, null=True)
+    link = models.CharField(max_length=400, null=True)
     portal = models.ForeignKey(
         'Portal',
         on_delete=models.CASCADE,
