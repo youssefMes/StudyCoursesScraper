@@ -6,3 +6,4 @@ django-cors-headers
 scrapy
 scrapy_djangoitem
 scrapy-inline-requests
+djangorestframework-simplejwt

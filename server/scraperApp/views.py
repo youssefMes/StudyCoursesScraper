@@ -1,10 +1,20 @@
 from rest_framework import viewsets
 from .models import Course                 
 from .serializers import CourseSerializer 
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from rest_framework import generics, permissions, mixins
+from rest_framework.response import Response
+from .serializers import RegisterSerializer, UserSerializer
+from django.contrib.auth.models import User
+
+
 
 class CourseView(viewsets.ModelViewSet):  
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
+    permission_classes = [IsAuthenticated]
+    
     def get_queryset(self):
         '''
         List all the courses
@@ -14,6 +24,7 @@ class CourseView(viewsets.ModelViewSet):
         degree =  self.request.GET.get('degree')
         study_form =  self.request.GET.get('study_form')
         name =  self.request.GET.get('name')
+        portal =  self.request.GET.get('portal')
           
         if city:
             queryset=queryset.filter(information__city__icontains=city)
@@ -23,6 +34,19 @@ class CourseView(viewsets.ModelViewSet):
             queryset=queryset.filter(information__study_form__icontains=study_form)
         if name:
             queryset=queryset.filter(information__study_form__icontains=name)
+        if portal:
+            queryset=queryset.filter(portal__name=portal)
 
         return queryset
     
+class RegisterView(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
+    def post(self, request, *args,  **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "user": UserSerializer(user,context=self.get_serializer_context()).data,
+            "message": "User Created Successfully",
+        })
