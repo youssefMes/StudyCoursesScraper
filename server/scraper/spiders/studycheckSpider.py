@@ -10,7 +10,7 @@ from pprint import pprint
 from inline_requests import inline_requests
 from re import sub
 
-class StudycheckspiderSpider(Spider):
+class StudycheckSpider(Spider):
     name = 'studycheckSpider'
     allowed_domains = ['www.studycheck.de']
     start_urls = ['https://www.studycheck.de/suche?rt=2&q=&c=1&modal=1']
@@ -27,7 +27,6 @@ class StudycheckspiderSpider(Spider):
         'Standorte': 'city',
         'Link zur Website': 'website_link',
         'Gesamtkosten': 'costs',
-        'Hinweise': 'hints',
         'Creditpoints': 'credit_points',
         'Voraussetzungen': 'requirements'
     }

@@ -3,7 +3,7 @@ client/node_modules
 .DS_Store
 data/
 scraper/*.json
-server/scraper/.scrapy/
+server/.scrapy/
 __pycache__/
 *.py[cod]
 # Django:

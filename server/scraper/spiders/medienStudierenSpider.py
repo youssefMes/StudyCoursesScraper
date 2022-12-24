@@ -33,7 +33,7 @@ class MedienstudierenSpider(Spider):
     course = {}
     def parse(self, response):
         rows = response.xpath('//div[@class="row flex-row"]/div[@data-pid]')
-        for row in rows:
+        for row in rows[0:1]:
             domain = getattr(self, 'allowed_domains')[0]
             href = row.xpath('a/@href').extract_first()
             yield Request('https://' + domain + href, callback=self.parse_courses)
@@ -56,13 +56,13 @@ class MedienstudierenSpider(Spider):
                 if link:
                     setattr(self, 'course', {'study_form': study_form})
                     yield Request('https://' + domain + link, callback=self.parse_single_course)
+                    continue
                 loader = ItemLoader(item=CourseItem(), response=response)
                 loader.default_input_processor = TakeFirst()
                 loader.default_output_processor = TakeFirst()
                 name = course.xpath('normalize-space(span[@class="sgang"]/span/text())').extract_first()
                 loader.add_value('name', name)
                 loader.add_value('information', {'study_form': study_form, 'degree': tab_name})
-                print('loader.load_item()', loader.load_item())
                 yield loader.load_item()
 
     def parse_single_course(self, response):
@@ -74,7 +74,8 @@ class MedienstudierenSpider(Spider):
         mapping = getattr(self, 'mapping')
         university = response.xpath('//div[@class="content"][1]/div[@class="row"]//a[@title]/@title').extract_first()
         if len(university.split('-')) > 1 and university.split('-')[-1].strip() in ['Vollzeit', 'Berufsbegleitend']:
-            university = university.split('-')[0].split()
+            university = university.split('-')[0].strip()
+            
         information = {
             'university': university,
         }

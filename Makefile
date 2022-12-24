@@ -11,9 +11,7 @@ logs:
 portals:
 	@docker-compose exec server python manage.py populate_portals
 scrape:
-	#@docker-compose exec server bash -c "cd scraper && scrapy crawl studycheckSpider"
-	#@docker-compose exec server bash -c "cd scraper && scrapy crawl medienStudierenSpider"
-	@docker-compose exec server python manage.py courses_scraper
+	@docker-compose exec server python manage.py run_spiders
 
 # Shell colors.
 RED=\033[0;31m
