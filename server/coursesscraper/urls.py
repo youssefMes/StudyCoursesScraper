@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers                 
-from scraperApp.views import CourseView                            
+from scraperApp.views import CourseView, BookmarkView                           
 
 router = routers.DefaultRouter()                   
-router.register(r'courses', CourseView , 'courses')  
+router.register(r'courses', CourseView)  
+router.register(r'bookmarks', BookmarkView)  
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),

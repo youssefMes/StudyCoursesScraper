@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser, AbstractUser
-)
+from django.contrib.auth.models import AbstractUser
+from .managers import UserManager
+
 class Information(models.Model):
     university = models.CharField(max_length=100)
     description = models.TextField(null=True)
@@ -70,35 +70,7 @@ class Course(models.Model):
     evaluation_count = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-class UserManager(BaseUserManager):
-    def create_user(self, email, password, **extra_fields):
-        """
-        Creates and saves a User with the given email and password.
-        """
-        if not email:
-            raise ValueError('Users must have an email address')
-        user = self.model(
-            email=self.normalize_email(email),
-            **extra_fields
-        )
 
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password, **extra_fields):
-        """
-        Creates and saves a superuser with the given email and password.
-        """
-        user = self.create_user(
-            email,
-            password=password,
-            **extra_fields
-        )
-        user.is_superuser = True
-        user.is_staff = True
-        user.save(using=self._db)
-        return user
     
 class User(AbstractUser):
     """ class Type(models.TextChoices):
@@ -128,3 +100,15 @@ class User(AbstractUser):
     def has_module_perms(self, app_label):
         "Does the user have permissions to view the app `app_label`?"
         return True
+
+class Bookmark(models.Model):
+    course = models.ForeignKey(
+        'Course',
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+    )
+    class Meta:
+       unique_together = ('user', 'course')
