@@ -77,7 +77,6 @@ class UserManager(BaseUserManager):
         """
         if not email:
             raise ValueError('Users must have an email address')
-
         user = self.model(
             email=self.normalize_email(email),
             **extra_fields
@@ -101,24 +100,11 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def create_staffuser(self, email, password, **extra_fields):
-        """
-        Creates and saves a staff user with the given email and password.
-        """
-        user = self.create_user(
-            email,
-            password=password,
-            **extra_fields
-        )
-        user.is_staff = True
-        user.save(using=self._db)
-        return user
-
 class User(AbstractUser):
-    class Type(models.TextChoices):
+    """ class Type(models.TextChoices):
         APPLICANT = 'applicant'
         COURSE_OPERATOR = 'course_operator'
-        ADMINISTRATOR = 'admin'
+        ADMINISTRATOR = 'admin' """
     
     username = None
     email = models.EmailField(
@@ -126,10 +112,11 @@ class User(AbstractUser):
         max_length=255,
         unique=True,
     )
-    type = models.CharField(max_length=20, choices=Type.choices)
-    
+    #type = models.CharField(max_length=20, choices=Type.choices)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [] # Email & Password are required by default.
+    REQUIRED_FIELDS = ['first_name', 'last_name'] # Email & Password are required by default.
     objects = UserManager()
     def __str__(self):
         return self.email

@@ -1,8 +1,10 @@
 Django>=4.0
 psycopg2>=2.8
+djoser
 django-filter
 djangorestframework
 django-cors-headers
+django-extensions
 scrapy
 scrapy_djangoitem
 scrapy-inline-requests
