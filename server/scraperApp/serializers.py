@@ -15,11 +15,13 @@ class BookmarkSerializer(serializers.ModelSerializer):
         model = Bookmark
         fields = ('user' ,'course_name','university', 'course')
         extra_kwargs = {
-            'user':{'write_only': True},
+            'user': {'write_only': True},
         }
 
 class UserCreateSerializer(BaseUserCreateSerializer):
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
+    
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = ('password','first_name', 'last_name', 'email')
-
