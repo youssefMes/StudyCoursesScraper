@@ -1,41 +1,22 @@
 import math
-from pickle import FALSE
 from rest_framework import viewsets, status
-from .models import Bookmark, Course                 
+from .models import Bookmark, Course, Information                
 from .serializers import CourseSerializer, BookmarkSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework import filters, generics
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class CourseView(viewsets.ModelViewSet):  
+class CourseView(generics.ListCreateAPIView):  
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    filterset_fields = ['information__city', 'information__degree', 'information__study_form', 'portal__name']
+    search_fields = ['@name']
+
     
-    def get_queryset(self):
-        '''
-        List all the courses
-        '''
-        queryset = super().get_queryset()
-        city =  self.request.GET.get('city')
-        degree =  self.request.GET.get('degree')
-        study_form =  self.request.GET.get('study_form')
-        name =  self.request.GET.get('name')
-        portal =  self.request.GET.get('portal')
-          
-        if city:
-            queryset=queryset.filter(information__city__icontains=city)
-        if degree:
-            queryset=queryset.filter(information__degree__icontains=degree)
-        if study_form:
-            queryset=queryset.filter(information__study_form__icontains=study_form)
-        if name:
-            queryset=queryset.filter(information__study_form__icontains=name)
-        if portal:
-            queryset=queryset.filter(portal__name=portal)
-
-        return queryset
-
 
 class BookmarkView(viewsets.ViewSet):  
     serializer_class = BookmarkSerializer
@@ -67,3 +48,31 @@ class BookmarkView(viewsets.ViewSet):
         return Response({
             'message': 'Bookmark deleted Successfully'
         })
+
+
+class FiltersView(generics.ListCreateAPIView):  
+    queryset = Course.objects.values(
+        'portal__name', 'information__city', 'information__degree', 'information__study_form'
+    ).distinct()
+    
+    def list(self, request):
+        queryset = self.get_queryset()
+        cities = []
+        degrees = []
+        ##todo make study_form an array field
+        study_forms = []
+        portals = []
+        for item in queryset:
+            print('item', item)
+            if item['portal__name'] not in portals:
+                portals.append(item['portal__name'])
+            if item['information__degree'] not in degrees:
+                degrees.append(item['information__degree'])
+            for form in item['information__study_form'].split(','):
+                if form not in study_forms:
+                    study_forms.append(form)
+                
+            for location in item['information__city']:
+                if  location not in cities:
+                    cities.append(location)
+        return Response({'cities': cities, 'degrees': degrees, 'study_form': study_forms, 'portals': portals })

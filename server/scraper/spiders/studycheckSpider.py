@@ -148,7 +148,9 @@ class StudycheckSpider(Spider):
             if label in excluded:
                 continue
             value = ''
-            if label in ['Inhalte', 'Voraussetzungen']:
+            if label in ['Standorte', 'Unterrichtssprachen']:
+                value = div.xpath("normalize-space(div[contains(@class, 'card-row-content')])").extract()
+            elif label in ['Inhalte', 'Voraussetzungen']:
                 value = ''.join(div.xpath("div[contains(@class, 'card-row-content')]//*").getall())
             else:
                 value = div.xpath("normalize-space(div[contains(@class, 'card-row-content')])").extract_first()

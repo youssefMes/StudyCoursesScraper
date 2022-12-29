@@ -1,16 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
+from django.contrib.postgres.fields import ArrayField
 
 class Information(models.Model):
     university = models.CharField(max_length=100)
     description = models.TextField(null=True)
-    city = models.CharField(max_length=200)
+    city = ArrayField(models.CharField(max_length=20), blank=True, default=list) #models.CharField(max_length=200)
     study_start = models.CharField(max_length=100, null=True)
     study_form = models.CharField(max_length=100, null=True)
     study_periode = models.CharField(max_length=100, null=True)
     degree = models.CharField(max_length=100, null=True)
-    languages = models.CharField(max_length=100, null=True)
+    languages = ArrayField(models.CharField(max_length=20), blank=True, default=list)#models.CharField(max_length=100, null=True)
     website_link = models.CharField(max_length=400, null=True)
     credit_points = models.CharField(max_length=50, null=True)
     costs = models.CharField(max_length=100, null=True)

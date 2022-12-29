@@ -16,7 +16,7 @@ class StudiengaengezeitSpider(Spider):
     params = {'limit': 100, 'page': 1, 'ort[]' : citys}
     start_urls = [url + urllib.parse.urlencode(params, True)]
     portal_link = 'https://studiengaenge.zeit.de'
-    portal_name = 'medien-studieren'
+    portal_name = 'studiengaenge.zeit'
     custom_settings = {
      'CONCURRENT_REQUESTS': 1
     }
@@ -36,12 +36,12 @@ class StudiengaengezeitSpider(Spider):
             
             information = {
                 'university': result['college']['name'],
-                'city': ','.join(result['location_names']),
+                'city': result['location_names'],
                 'study_start': result['start'],
                 'study_form': ','.join(result['types']),
                 'study_periode': result['length'],
                 'degree': result['degree'],
-                'languages': ','.join(result['languages']),
+                'languages': result['languages'],
                 'website_link': result['url'],
                 'costs': result['fee'],
                 'contents': ','.join(result['subjects']),
@@ -63,6 +63,7 @@ class StudiengaengezeitSpider(Spider):
             loader.add_value('information', information)
             yield loader.load_item()
             
-        if next_page:
+        #if next_page:
+        if next_page != '2':
             params = {**getattr(self, 'params'), 'page': next_page}
             yield Request(getattr(self, 'url') + urllib.parse.urlencode(params, True), callback=self.parse)
