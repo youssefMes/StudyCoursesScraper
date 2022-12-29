@@ -6,17 +6,35 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import filters, generics
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import BaseCSVFilter, CharFilter, FilterSet
+from django.shortcuts import get_object_or_404
 
 
-class CourseView(generics.ListCreateAPIView):  
+class ArrayFilter(FilterSet):
+    information__city = CharFilter(lookup_expr='contains')
+
+    class Meta:
+        model = Course
+        fields = ('information__city', 'information__degree', 'information__study_form')
+
+class CourseView(viewsets.ViewSet):  
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
-    permission_classes = [IsAuthenticated]
-    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    filterset_fields = ['information__city', 'information__degree', 'information__study_form', 'portal__name']
-    search_fields = ['@name']
+    def list(self, request):
+        queryset = Course.objects.all()
+        serializer = CourseSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-    
+    def retrieve(self, request, pk=None):
+        queryset = Course.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = CourseSerializer(user)
+        return Response(serializer.data)
+    #filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    #filterset_fields = ['information__city', 'information__degree', 'information__study_form', 'portal__name']
+    #search_fields = ['@name']
+    #filterset_class = ArrayFilter
+
 
 class BookmarkView(viewsets.ViewSet):  
     serializer_class = BookmarkSerializer

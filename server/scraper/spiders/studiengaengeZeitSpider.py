@@ -36,12 +36,12 @@ class StudiengaengezeitSpider(Spider):
             
             information = {
                 'university': result['college']['name'],
-                'city': result['location_names'],
+                'city': ','.join(result['location_names']),
                 'study_start': result['start'],
                 'study_form': ','.join(result['types']),
                 'study_periode': result['length'],
                 'degree': result['degree'],
-                'languages': result['languages'],
+                'languages': ','.join(result['languages']),
                 'website_link': result['url'],
                 'costs': result['fee'],
                 'contents': ','.join(result['subjects']),

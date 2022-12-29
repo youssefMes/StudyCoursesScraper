@@ -19,13 +19,13 @@ from rest_framework import routers
 from scraperApp.views import CourseView, BookmarkView, FiltersView                       
 
 router = routers.DefaultRouter()                   
-#router.register(r'courses', CourseView.as_view())  
+router.register(r'courses', CourseView)  
 router.register(r'bookmarks', BookmarkView)  
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path("api/", include("djoser.urls")),
     path("api/", include("djoser.urls.jwt")),
-    path("api/courses/", CourseView.as_view()),
+  #  path("api/courses/", CourseView.as_view()),
     path("api/filters/", FiltersView.as_view()),
 ]

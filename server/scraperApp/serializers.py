@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Bookmark, User, Course, Comment
+from .models import Bookmark, Information, User, Course, Comment
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -7,12 +7,17 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
 
+class InformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Information
+        fields = '__all__'
+
 class CourseSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(source='comment_set', many=True)
+    information = InformationSerializer(required=True)
     class Meta:
         model = Course
         fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments')
-        depth=2
 
 class BookmarkSerializer(serializers.ModelSerializer):
     course_name = serializers.ReadOnlyField(source='course.name')

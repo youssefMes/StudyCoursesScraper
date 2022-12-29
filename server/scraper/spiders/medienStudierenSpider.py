@@ -118,4 +118,4 @@ class MedienstudierenSpider(Spider):
                     if option['label'] not in locations:
                         locations.append(option['label'])
 
-        return locations
+        return ','.join(locations)
