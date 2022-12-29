@@ -6,35 +6,35 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import filters, generics
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import BaseCSVFilter, CharFilter, FilterSet
 from django.shortcuts import get_object_or_404
 
 
-class ArrayFilter(FilterSet):
-    information__city = CharFilter(lookup_expr='contains')
-
-    class Meta:
-        model = Course
-        fields = ('information__city', 'information__degree', 'information__study_form')
-
-class CourseView(viewsets.ViewSet):  
+class CourseView(viewsets.ModelViewSet):  
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
-    def list(self, request):
-        queryset = Course.objects.all()
-        serializer = CourseSerializer(queryset, many=True)
-        return Response(serializer.data)
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['@name']
+    def get_queryset(self):
+        '''
+        List all the courses
+        '''
+        queryset = super().get_queryset()
+        city =  self.request.GET.get('city')
+        degree =  self.request.GET.get('degree')
+        study_form =  self.request.GET.get('study_form')
+        name =  self.request.GET.get('name')
+        portal =  self.request.GET.get('portal')
 
-    def retrieve(self, request, pk=None):
-        queryset = Course.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = CourseSerializer(user)
-        return Response(serializer.data)
-    #filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    #filterset_fields = ['information__city', 'information__degree', 'information__study_form', 'portal__name']
-    #search_fields = ['@name']
-    #filterset_class = ArrayFilter
+        if city:
+            queryset=queryset.filter(information__city__icontains=city)
+        if degree:
+            queryset=queryset.filter(information__degree__icontains=degree)
+        if study_form:
+            queryset=queryset.filter(information__study_form__icontains=study_form)
+        if portal:
+            queryset=queryset.filter(portal__name=portal)
 
+        return queryset
 
 class BookmarkView(viewsets.ViewSet):  
     serializer_class = BookmarkSerializer

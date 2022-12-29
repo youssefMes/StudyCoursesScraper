@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Bookmark, Information, User, Course, Comment
+from .models import Bookmark, Information, Portal, User, Course, Comment
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+
+class PortalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Portal
+        fields = ('name', 'link')
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,6 +20,7 @@ class InformationSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(source='comment_set', many=True)
     information = InformationSerializer(required=True)
+    portal = PortalSerializer(required=True)
     class Meta:
         model = Course
         fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments')

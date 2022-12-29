@@ -26,6 +26,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path("api/", include("djoser.urls")),
     path("api/", include("djoser.urls.jwt")),
-  #  path("api/courses/", CourseView.as_view()),
     path("api/filters/", FiltersView.as_view()),
 ]
