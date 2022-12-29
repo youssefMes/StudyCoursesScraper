@@ -1,12 +1,15 @@
-import math
 from rest_framework import viewsets, status
-from .models import Bookmark, Course, Information                
+from .models import Bookmark, Course                
 from .serializers import CourseSerializer, BookmarkSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import filters, generics
-from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import get_object_or_404
+from rest_framework.pagination import LimitOffsetPagination
+
+class Pagination(LimitOffsetPagination):
+    page_size = 50
+    max_page_size = 500
+
 
 
 class CourseView(viewsets.ModelViewSet):  
@@ -14,6 +17,7 @@ class CourseView(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     filter_backends = [filters.SearchFilter]
     search_fields = ['@name']
+    pagination_class = Pagination
     def get_queryset(self):
         '''
         List all the courses
@@ -40,16 +44,18 @@ class BookmarkView(viewsets.ViewSet):
     serializer_class = BookmarkSerializer
     queryset = Bookmark.objects.all()
     permission_classes = [IsAuthenticated]
-    
+    pagination_class = Pagination
+
     def list(self, request):
-        page = int(request.GET.get('page', 1))
-        limit = int(request.GET.get('limit', 10))
-        start = (page - 1) * limit
-        end = limit * page
         bookmarks = self.queryset.filter(user__email=request.user)
-        serializer = self.serializer_class(bookmarks[start:end], many=True)
-        return Response({'count': bookmarks.count(), 'bookmarks': serializer.data}, status.HTTP_200_OK)
-    
+        paginator = Pagination()
+        page = paginator.paginate_queryset(bookmarks, self.request)
+        if page is not None:
+            serializer = BookmarkSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+
+        serializer = BookmarkSerializer(self.queryset, many=True)
+        return Response(serializer.data)
     
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
