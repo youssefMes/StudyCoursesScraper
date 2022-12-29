@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'scraper',
     'scraperApp',
     'corsheaders',
     'rest_framework',
