@@ -1,15 +1,8 @@
-import {
-  Box,
-  Container,
-  Stack,
-  Text,
-  Link,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Container, Stack, Link } from "@chakra-ui/react";
 
 const Footer = () => {
   return (
-    <Box bg="black" left={0} right={0} bottom={0} position="fixed">
+    <Box bg="black" left={0} right={0} bottom={0} position="sticky" top="100%">
       <Container
         as={Stack}
         maxW={"6xl"}
