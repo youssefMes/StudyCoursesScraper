@@ -1,11 +1,17 @@
 from rest_framework import serializers
-from .models import Bookmark, User, Course
+from .models import Bookmark, User, Course, Comment
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
 class CourseSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(source='comment_set', many=True)
     class Meta:
         model = Course
-        fields = ('id' ,'name', 'information', 'link', 'portal')
+        fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments')
         depth=2
 
 class BookmarkSerializer(serializers.ModelSerializer):
