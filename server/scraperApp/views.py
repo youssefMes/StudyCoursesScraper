@@ -9,6 +9,7 @@ from rest_framework.pagination import LimitOffsetPagination
 class Pagination(LimitOffsetPagination):
     page_size = 50
     max_page_size = 500
+    offset_query_param = 'page'
 
 
 
