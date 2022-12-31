@@ -5,6 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import filters, generics
 from rest_framework.pagination import LimitOffsetPagination
+from operator import or_
+from functools import reduce
+from django.db.models import Q
 
 class Pagination(LimitOffsetPagination):
     page_size = 50
@@ -24,20 +27,22 @@ class CourseView(viewsets.ModelViewSet):
         List all the courses
         '''
         queryset = super().get_queryset()
-        city =  self.request.GET.get('city')
-        degree =  self.request.GET.get('degree')
-        study_form =  self.request.GET.get('study_form')
-        name =  self.request.GET.get('name')
-        portal =  self.request.GET.get('portal')
-
-        if city:
-            queryset=queryset.filter(information__city__icontains=city)
-        if degree:
-            queryset=queryset.filter(information__degree__icontains=degree)
-        if study_form:
-            queryset=queryset.filter(information__study_form__icontains=study_form)
-        if portal:
-            queryset=queryset.filter(portal__name=portal)
+        cities =  self.request.GET.getlist('cities')
+        degrees =  self.request.GET.getlist('degrees')
+        study_forms =  self.request.GET.getlist('study_forms')
+        portals =  self.request.GET.getlist('portals')        
+        languages =  self.request.GET.getlist('languages')        
+        
+        if cities:
+            queryset=queryset.filter(reduce(or_, [Q(information__city__icontains=city) for city in cities]))
+        if degrees:
+            queryset=queryset.filter(reduce(or_, [Q(information__degree__icontains=degree) for degree in degrees]))
+        if study_forms:
+            queryset=queryset.filter(reduce(or_, [Q(information__study_form__icontains=study_form) for study_form in study_forms]))
+        if portals:
+            queryset=queryset.filter(reduce(or_, [Q(portal__name=portal) for portal in portals]))
+        if languages:
+            queryset=queryset.filter(reduce(or_, [Q(information__languages__icontains=language) for language in languages]))
 
         return queryset
 
@@ -77,27 +82,38 @@ class BookmarkView(viewsets.ViewSet):
 
 class FiltersView(generics.ListCreateAPIView):  
     queryset = Course.objects.values(
-        'portal__name', 'information__city', 'information__degree', 'information__study_form'
+        'portal__name', 'information__city', 'information__degree', 'information__study_form', 'information__languages'
     ).distinct()
     
     def list(self, request):
         queryset = self.get_queryset()
         cities = []
-        degrees = []
-        ##todo make study_form an array field
+        degrees = ['Master', 'Bachelor']
         study_forms = []
         portals = []
+        languages = []
         for item in queryset:
-            print('item', item)
             if item['portal__name'] not in portals:
                 portals.append(item['portal__name'])
-            if item['information__degree'] not in degrees:
+            if not any(deg in item['information__degree'] for deg in degrees):
                 degrees.append(item['information__degree'])
+            if item['information__languages']:
+                for l in item['information__languages'].split(','):
+                    if l not in languages:
+                        languages.append(l)
             for form in item['information__study_form'].split(','):
-                if form not in study_forms:
+                if not any(form in item for item in study_forms):
                     study_forms.append(form)
-                
-            for location in item['information__city']:
+            
+            for location in item['information__city'].split(','):
                 if  location not in cities:
                     cities.append(location)
-        return Response({'cities': cities, 'degrees': degrees, 'study_form': study_forms, 'portals': portals })
+        return Response(
+                    {
+                        'cities': sorted(cities),
+                        'degrees': degrees,
+                        'study_form': sorted(study_forms),
+                        'portals': sorted(portals),
+                        'languages': sorted(languages)
+                    }
+                )
