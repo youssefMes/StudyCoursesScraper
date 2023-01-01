@@ -110,10 +110,10 @@ class FiltersView(generics.ListCreateAPIView):
                     cities.append(location)
         return Response(
                     {
-                        'cities': sorted(cities),
-                        'degrees': degrees,
-                        'study_form': sorted(study_forms),
-                        'portals': sorted(portals),
-                        'languages': sorted(languages)
+                        'cities': {'name': 'Standort', 'items': sorted(cities)},
+                        'degrees': {'name': 'Abschulss', 'items': degrees},
+                        'study_forms': {'name': 'Studienform', 'items': sorted(study_forms)},
+                        'portals': {'name': 'Portal', 'items': sorted(portals)},
+                        'languages': {'name': 'Unterrichtssprachen', 'items': sorted(languages)}
                     }
                 )
