@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#o&ez_x_3=%r4de!ifzndz%m&!w^%nn6%@c%c68)vk8pk1sjao
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
 
 # Application definition
@@ -130,6 +130,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+STATIC_ROOT = BASE_DIR / 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -148,11 +150,15 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'scraperApp.User'
 
 CORS_ORIGIN_WHITELIST = [
+    'http://localhost',
     'http://localhost:3000',
+    'http://localhost:3001',
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    'http://localhost',
     'http://localhost:3000',
+    'http://localhost:3001',
 ]
 
 SIMPLE_JWT = {
