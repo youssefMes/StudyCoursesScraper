@@ -3,6 +3,15 @@ start:
 	@docker-compose exec server python manage.py makemigrations
 	@docker-compose exec server python manage.py migrate
 	@make portals
+
+prod-start:
+	@docker-compose -f docker-compose.prod.yaml up -d --build
+	@docker-compose exec server python manage.py migrate
+	@make portals
+
+prod-stop:
+	@docker-compose -f docker-compose.prod.yaml down -v
+
 stop:
 	@docker-compose down -v
 logs:
