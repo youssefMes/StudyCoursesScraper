@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 class Information(models.Model):
     university = models.CharField(max_length=100)
     description = models.TextField(null=True)
-    city = models.CharField(max_length=200)
+    city = models.CharField(max_length=500)
     study_start = models.CharField(max_length=100, null=True)
     study_form = models.CharField(max_length=100, null=True)
     study_periode = models.CharField(max_length=100, null=True)
@@ -36,14 +36,13 @@ class Comment(Rating):
     date = models.DateField()
 
 class Star(Rating):
-    title = models.CharField(max_length=30)
-    name = models.CharField(max_length=30)
-    value = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
     report_count = models.IntegerField(null=True)
 
 class Percentage(Rating):
-    title = models.CharField(max_length=30)
-    value = models.CharField(max_length=30)
+    title = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
 
 class Portal(models.Model):
     name = models.CharField(max_length=20)

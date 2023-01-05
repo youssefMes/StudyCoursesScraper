@@ -15,6 +15,14 @@ class CourseItem(DjangoItem):
         input_processor=Identity(),
         output_processor=Identity()
     )
+    star_reports = Field(
+        input_processor=Identity(),
+        output_processor=Identity()
+    )
+    reports_stats = Field(
+        input_processor=Identity(),
+        output_processor=Identity()
+    )
 
 class ScraperItem(scrapy.Item):
     # define the fields for your item here like:

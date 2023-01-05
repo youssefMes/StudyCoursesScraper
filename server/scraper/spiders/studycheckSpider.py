@@ -8,7 +8,7 @@ from scrapy.loader import ItemLoader
 from scraper.items import CourseItem
 from pprint import pprint
 from inline_requests import inline_requests
-from re import sub
+from re import sub, findall
 
 class StudycheckSpider(Spider):
     name = 'studycheckSpider'
@@ -65,8 +65,13 @@ class StudycheckSpider(Spider):
         loader.add_xpath('name', 'normalize-space(//h1[@class="course-title"]/text())')
         loader.add_value('link', response._url)
         loader.add_value('information', informations)
+        
         comments = []
         resp = yield Request(response._url + '/bewertungen')
+        headline = resp.xpath('normalize-space(//h2[@class="reports-headline"])').extract_first()
+        evaluation_count = findall(r'\d+', headline)[0]
+        star_reports = self.parse_item_reports(response=resp)
+        reports_stats = self.parse_item_statistics(response=resp)
         comments += self.parse_item_evaluations(response=resp)
         next_page = resp.xpath('//ul[@class="pagination"]/li[last()]/a/@href').extract_first()                 
         if isinstance(next_page, str):
@@ -86,11 +91,13 @@ class StudycheckSpider(Spider):
             next_page = next_page.split('/')[-1] if next_page else None
 
         loader.add_value('comments', comments)
+        loader.add_value('star_reports', star_reports)
+        loader.add_value('reports_stats', reports_stats)
+        loader.add_value('evaluation_count', evaluation_count)
         yield loader.load_item()
 
     @staticmethod    
     def parse_item_evaluations(response):
-        headline = response.xpath('normalize-space(//h2[@class="reports-headline"])').extract_first()
         reports = response.xpath('//section[contains(@class, "reports")]/div[@data-report-id]')
         comments = []
         for report in reports:
@@ -118,6 +125,38 @@ class StudycheckSpider(Spider):
 
         return comments    
     
+    @staticmethod    
+    def parse_item_reports(response):
+        list = response.xpath('//div[contains(@class, "reports-details")]/div[@class="card-block"]/ul')
+        star_reports = []
+        for item in list.xpath('li'):
+            print('class', item.xpath('@class'))
+            if item.xpath('@class').extract_first() == 'total':
+                name = item.xpath('normalize-space(strong[@class="criteria-name"])').extract_first()
+            else:
+                name = item.xpath('normalize-space(span[@class="criteria-name"])').extract_first()
+            value = item.xpath('normalize-space(//div[@class="rating-value"])').extract_first()
+            print('name', name)
+            print('value', value)
+            star_reports.append({
+                'name': name,
+                'value': value
+            })
+        return star_reports
+
+    @staticmethod    
+    def parse_item_statistics(response):
+        title = response.xpath('normalize-space(//div[contains(@class, "statistics-recommendations")]/div[@class="card-header"]/h2)').extract_first()
+        value = response.xpath('normalize-space(//div[contains(@class, "statistics-recommendations")]//svg[contains(@class, "svg-icon-smiley-positive")]/following-sibling::span)').extract_first()
+        digits = findall(r'\d+', value)
+        return [
+            {
+            'title': title,
+            'value': digits[0]
+            }
+        ]
+
+
     def parse_card(self, card):
         blocTitle = card.xpath("normalize-space(header[contains(@class, 'card-header')]/h2/text())").extract_first()
         
