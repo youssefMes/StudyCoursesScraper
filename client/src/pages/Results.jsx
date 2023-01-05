@@ -27,7 +27,7 @@ export default function Results() {
   const zulassungsmodus = searchParams.get("zulassungsmodus");
 
   const {
-    data: courses,
+    data: data,
     isLoading,
     isError,
   } = useQuery([keyword], () =>
@@ -60,12 +60,12 @@ export default function Results() {
   return (
     <ResultsLayout>
       <Container maxW="8xl">
-        <Text>{courses?.length} Ergebnisse für</Text>
+        <Text>{data.results?.length} Ergebnisse für</Text>
         <Heading as="h1" color="secondary" fontWeight="normal" mb="8">
           {keyword ?? "Medieninformatik"}
         </Heading>
         <Stack spacing={6}>
-          {courses.map((cours) => (
+          {data.results.map((cours) => (
             <Grid
               key={cours.id}
               gridTemplateColumns={{

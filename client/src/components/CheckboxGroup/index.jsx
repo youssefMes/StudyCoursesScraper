@@ -54,12 +54,12 @@ export default function CheckboxGroup({
         {groupTitle}
       </Heading>}
       <Stack>
-        {options.map((avatar) => {
+        {options.map((option) => {
           return (
             <CustomRadio
-              key={avatar.value}
-              label={avatar.label}
-              {...getCheckboxProps({ value: avatar.value })}
+              key={option.value}
+              label={option.label}
+              {...getCheckboxProps({ value: option.label })}
             />
           );
         })}

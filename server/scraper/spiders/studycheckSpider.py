@@ -162,9 +162,9 @@ class StudycheckSpider(Spider):
         
         informations = {}
         match blocTitle:
-            case 'Vollzeitstudium' | 'Berufsbegleitendes Studium' | 'Duales Studium':
+            case 'Vollzeitstudium' | 'Berufsbegleitendes Studium' | 'Duales Studium' | 'Studium neben dem Beruf':
                 informations = {
-                    'study_form': blocTitle,
+                    'study_form': blocTitle if blocTitle != 'Studium neben dem Beruf' else 'Berufsbegleitendes Studium',
                     **self.parse_card_informations(card)
                 }
             case 'Studiengangdetails':
