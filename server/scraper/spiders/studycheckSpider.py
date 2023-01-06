@@ -1,4 +1,3 @@
-from ast import parse
 from json import load
 from pprint import pprint
 from this import d
@@ -9,6 +8,12 @@ from scraper.items import CourseItem
 from pprint import pprint
 from inline_requests import inline_requests
 from re import sub, findall
+import requests
+from django.core import files
+from io import BytesIO
+
+from scraperApp.models import Logo
+
 
 class StudycheckSpider(Spider):
     name = 'studycheckSpider'
@@ -30,18 +35,20 @@ class StudycheckSpider(Spider):
         'Creditpoints': 'credit_points',
         'Voraussetzungen': 'requirements'
     }
+    image = ''
     
     def parse(self, response):
         for course in response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex')[0:1]:
             url = course.css('a::attr(href)').extract_first()
+            image = course.xpath('substring-before(substring-after(//div[contains(@class, "rfv1-media-layout__logo")]/@style, "background: url("), ")")').extract_first()
+            setattr(self, 'image', image)
             yield Request(url, callback = self.parse_item_informations)
-
         next_page = response.xpath('//nav[contains(@class, "rfv1-pagination")]/*[last()]')[0]
         if ('a' == next_page.root.tag):
             page = next_page.xpath('@href').extract_first().split('&')[-1]
             
             next_page_url = getattr(self, 'start_urls')[0] + '&' + page
-            if '3' in page:
+            if '2' in page:
                 return
             if next_page_url:
                 yield Request(next_page_url, callback = self.parse)
@@ -56,6 +63,7 @@ class StudycheckSpider(Spider):
         informations = {
             'university': response.xpath('normalize-space(//div[@class="institute-text"]/a/text())').extract_first()
         }
+        #image = response.xpath('substring-before(substring-after(//div[@class="courses-header-tile tile-1"]/@style, "background-image: url("), ")")').extract_first()
         for card in cards:
             informations = {**informations, **self.parse_card(card)} 
         
@@ -63,8 +71,10 @@ class StudycheckSpider(Spider):
         loader.default_input_processor = TakeFirst()
         loader.default_output_processor = TakeFirst()
         loader.add_xpath('name', 'normalize-space(//h1[@class="course-title"]/text())')
+        loader.add_xpath('logo', getattr(self, 'image'))
         loader.add_value('link', response._url)
         loader.add_value('information', informations)
+        #loader.add_value('image_url', image)
         
         comments = []
         resp = yield Request(response._url + '/bewertungen')
@@ -130,14 +140,11 @@ class StudycheckSpider(Spider):
         list = response.xpath('//div[contains(@class, "reports-details")]/div[@class="card-block"]/ul')
         star_reports = []
         for item in list.xpath('li'):
-            print('class', item.xpath('@class'))
             if item.xpath('@class').extract_first() == 'total':
                 name = item.xpath('normalize-space(strong[@class="criteria-name"])').extract_first()
             else:
                 name = item.xpath('normalize-space(span[@class="criteria-name"])').extract_first()
             value = item.xpath('normalize-space(//div[@class="rating-value"])').extract_first()
-            print('name', name)
-            print('value', value)
             star_reports.append({
                 'name': name,
                 'value': value
@@ -174,7 +181,7 @@ class StudycheckSpider(Spider):
                 else:
                     informations = {**informations, 'description': description}
             case 'Studienmodelle':
-                informations['models'] = self.parse_models(card=card.xpath('div[@class="card-block"]')[0])
+                informations['models'] = self.parse_models(card=card.xpath('div[contains(@class,"card-block")]')[0])
         return informations
 
     def parse_card_informations(self, card):

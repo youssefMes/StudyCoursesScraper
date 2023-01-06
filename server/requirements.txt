@@ -9,3 +9,4 @@ scrapy
 scrapy_djangoitem
 scrapy-inline-requests
 djangorestframework-simplejwt
+Pillow

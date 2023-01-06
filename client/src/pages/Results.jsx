@@ -79,7 +79,7 @@ export default function Results() {
             >
               <GridItem>
                 <Image
-                  src="/Rectangle 14.png"
+                  src={cours.logo?.image || "/Rectangle 14.png"}
                   alt="bla bla"
                   width="100%"
                   maxHeight="250px"

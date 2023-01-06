@@ -5,13 +5,16 @@
 
 
 # useful for handling different item types with a single interface
+from email.mime import image
 from itemadapter import ItemAdapter
-from scraperApp.models import Course, Information, Comment, Star, Percentage
+from scraperApp.models import Course, Information, Comment, Star, Percentage, Logo
 from asgiref.sync import sync_to_async
 from scraperApp.models import Portal
 import pprint
 import datetime
-import logging
+import logging, requests
+from django.core import files
+from io import BytesIO
 
 class ScraperPipeline(object):
     @sync_to_async
@@ -28,12 +31,27 @@ class ScraperPipeline(object):
         information = {}
         if 'information' in item.keys():
             information = Information.objects.create(**item['information'])
+        logo = None
+        if 'logo' in item.keys():
+            response = requests.get(item['logo'])
+            fp = BytesIO()
+            fp.write(response.content)
+            file_name = item['logo'].split('/')[-1]
+            found = Logo.objects.filter(path=file_name).exists()
+            print('fount', found)
+            print('file_name', file_name)
+            if found:
+                logo = Logo.objects.get(path=file_name)
+            else:
+                logo = Logo(path=file_name)
+                logo.image.save(file_name, files.File(fp))
         course = Course.objects.create(
             name=item['name'],
             link=item['link'] if 'link' in item.keys() else None,
             portal=portal,
             information=information,
-            evaluation_count=item['evaluation_count']
+            evaluation_count=item['evaluation_count'],
+            logo=logo
         )
 
         if 'comments' in item.keys():

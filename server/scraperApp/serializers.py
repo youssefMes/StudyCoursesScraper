@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Bookmark, Information, Percentage, Portal, Star, User, Course, Comment
+from .models import Bookmark, Information, Percentage, Portal, Star, User, Course, Comment, Logo
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+
+class LogoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logo
+        fields = ['image']
 
 class StarSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,9 +38,10 @@ class CourseSerializer(serializers.ModelSerializer):
     percentages = PercentageSerializer(source='percentage_set', many=True)
     information = InformationSerializer(required=True)
     portal = PortalSerializer(required=True)
+    logo = LogoSerializer()
     class Meta:
         model = Course
-        fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments', 'stars', 'percentages')
+        fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments', 'stars', 'percentages', 'logo')
 
 class BookmarkSerializer(serializers.ModelSerializer):
     course_name = serializers.ReadOnlyField(source='course.name')
