@@ -54,6 +54,10 @@ class History(models.Model):
         on_delete=models.CASCADE,)
     link = models.CharField(max_length=100)
 
+class Logo(models.Model):
+    path = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='./static/', max_length=500, null=True)
+
 
 class Course(models.Model):
     name = models.CharField(max_length=100, null=True)
@@ -64,6 +68,11 @@ class Course(models.Model):
     )
     information = models.OneToOneField(
         'Information',
+        on_delete=models.SET_NULL,
+        null=True
+    )
+    logo = models.OneToOneField(
+        'Logo',
         on_delete=models.SET_NULL,
         null=True
     )

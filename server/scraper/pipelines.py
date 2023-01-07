@@ -5,7 +5,6 @@
 
 
 # useful for handling different item types with a single interface
-from email.mime import image
 from itemadapter import ItemAdapter
 from scraperApp.models import Course, Information, Comment, Star, Percentage, Logo
 from asgiref.sync import sync_to_async
