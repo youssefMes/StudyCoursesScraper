@@ -63,7 +63,6 @@ class StudycheckSpider(Spider):
         informations = {
             'university': response.xpath('normalize-space(//div[@class="institute-text"]/a/text())').extract_first()
         }
-        #image = response.xpath('substring-before(substring-after(//div[@class="courses-header-tile tile-1"]/@style, "background-image: url("), ")")').extract_first()
         for card in cards:
             informations = {**informations, **self.parse_card(card)} 
         
@@ -74,7 +73,6 @@ class StudycheckSpider(Spider):
         loader.add_xpath('logo', getattr(self, 'image'))
         loader.add_value('link', response._url)
         loader.add_value('information', informations)
-        #loader.add_value('image_url', image)
         
         comments = []
         resp = yield Request(response._url + '/bewertungen')

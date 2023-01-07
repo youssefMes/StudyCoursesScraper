@@ -28,6 +28,7 @@ class MedienstudierenSpider(Spider):
         'Zugangsvoraussetzungen': 'requirements',
         'Zugangsvoraussetzungen & Studiengebühren': 'reqs_costs',
         'Studieninhalte': 'study_content',
+        'Studiengebühren': 'costs',
 
     }
     course = {}
