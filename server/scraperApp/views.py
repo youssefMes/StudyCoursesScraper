@@ -1,7 +1,8 @@
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from .models import Bookmark, Course                
 from .serializers import CourseSerializer, BookmarkSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import filters, generics
 from rest_framework.pagination import LimitOffsetPagination
@@ -45,6 +46,22 @@ class CourseView(viewsets.ModelViewSet):
             queryset=queryset.filter(reduce(or_, [Q(information__languages__icontains=language) for language in languages]))
 
         return queryset
+    
+    @action(methods=["patch"], detail=True, url_path="validate", url_name="validate", permission_classes=[IsAdminUser])
+    def validate(self, request, *args, **kwargs):
+        course = self.queryset.filter(id=kwargs['pk']).first()
+        course.is_valid = True
+        course.validated_by = request.user
+        course.save()
+        return Response(CourseSerializer(course, many=False).data)
+    @action(methods=["patch"], detail=True, url_path="invalidate", url_name="invalidate", permission_classes=[IsAdminUser])
+    def invalidate(self, request, *args, **kwargs):
+        course = self.queryset.filter(id=kwargs['pk']).first()
+        course.is_valid = False
+        course.invalidated_by = request.user
+        course.save()
+        return Response(CourseSerializer(course, many=False).data)
+    
 
 class BookmarkView(viewsets.ViewSet):  
     serializer_class = BookmarkSerializer

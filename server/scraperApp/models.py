@@ -78,6 +78,19 @@ class Course(models.Model):
     )
     evaluation_count = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_valid = models.BooleanField(default=False)
+    validated_by = models.ForeignKey(
+        'User',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='validation'
+    )
+    invalidated_by = models.ForeignKey(
+        'User',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='invalidation'
+    )
 
 
     

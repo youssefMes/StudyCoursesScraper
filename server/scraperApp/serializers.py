@@ -41,7 +41,7 @@ class CourseSerializer(serializers.ModelSerializer):
     logo = LogoSerializer()
     class Meta:
         model = Course
-        fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments', 'stars', 'percentages', 'logo')
+        fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments', 'stars', 'percentages', 'logo', 'is_valid', 'validated_by', 'invalidated_by')
 
 class BookmarkSerializer(serializers.ModelSerializer):
     course_name = serializers.ReadOnlyField(source='course.name')
@@ -55,7 +55,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        return User.objects.create_superuser(**validated_data)
     
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
