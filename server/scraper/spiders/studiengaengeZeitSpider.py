@@ -59,6 +59,7 @@ class StudiengaengezeitSpider(Spider):
             loader.default_input_processor = TakeFirst()
             loader.default_output_processor = TakeFirst()
             loader.add_value('name', result['name'])
+            loader.add_value('logo', result['college']['premium']['logo'])
             loader.add_value('link', course_link)
             loader.add_value('information', information)
             yield loader.load_item()
