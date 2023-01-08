@@ -32,6 +32,10 @@ class InformationSerializer(serializers.ModelSerializer):
         model = Information
         fields = '__all__'
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'is_active', 'is_staff')
 class CourseSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(source='comment_set', many=True)
     stars = StarSerializer(source='star_set', many=True)
@@ -39,6 +43,8 @@ class CourseSerializer(serializers.ModelSerializer):
     information = InformationSerializer(required=True)
     portal = PortalSerializer(required=True)
     logo = LogoSerializer()
+    validated_by = UserSerializer()
+    invalidated_by = UserSerializer()
     class Meta:
         model = Course
         fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments', 'stars', 'percentages', 'logo', 'is_valid', 'validated_by', 'invalidated_by')

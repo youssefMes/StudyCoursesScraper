@@ -52,6 +52,7 @@ class CourseView(viewsets.ModelViewSet):
         course = self.queryset.filter(id=kwargs['pk']).first()
         course.is_valid = True
         course.validated_by = request.user
+        course.invalidated_by = None
         course.save()
         return Response(CourseSerializer(course, many=False).data)
     @action(methods=["patch"], detail=True, url_path="invalidate", url_name="invalidate", permission_classes=[IsAdminUser])
@@ -59,6 +60,7 @@ class CourseView(viewsets.ModelViewSet):
         course = self.queryset.filter(id=kwargs['pk']).first()
         course.is_valid = False
         course.invalidated_by = request.user
+        course.validated_by = None
         course.save()
         return Response(CourseSerializer(course, many=False).data)
     
