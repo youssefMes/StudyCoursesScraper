@@ -1,9 +1,7 @@
-import { Results, NavBar } from "./components/index";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
-import Footer from "./Footer/Footer";
-import LandingPage from "./pages/LandingPage";
-import AuthProvider from "./context/authProvider";
-import CoursPage from "./pages/CoursPage";
+import { NavBar, Footer } from "./components/index";
+import { LandingPage, Results, CoursPage } from "./pages/index";
+// import AuthProvider from "./context/authProvider";
 
 const App = () => {
   return (
@@ -15,7 +13,7 @@ const App = () => {
           path="search"
           element={
             // <AuthProvider>
-              <Results />
+            <Results />
             // </AuthProvider>
           }
         />
@@ -23,7 +21,7 @@ const App = () => {
           path="courses/:courseId"
           element={
             // <AuthProvider>
-              <CoursPage />
+            <CoursPage />
             // </AuthProvider>
           }
         />
