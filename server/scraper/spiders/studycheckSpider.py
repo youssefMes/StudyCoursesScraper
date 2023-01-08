@@ -154,12 +154,14 @@ class StudycheckSpider(Spider):
         title = response.xpath('normalize-space(//div[contains(@class, "statistics-recommendations")]/div[@class="card-header"]/h2)').extract_first()
         value = response.xpath('normalize-space(//div[contains(@class, "statistics-recommendations")]//svg[contains(@class, "svg-icon-smiley-positive")]/following-sibling::span)').extract_first()
         digits = findall(r'\d+', value)
-        return [
-            {
-            'title': title,
-            'value': digits[0]
-            }
+        if title != '' and len(digits) > 0:
+            return [
+                {
+                'title': title,
+                'value': digits[0]
+                }
         ]
+        return []
 
 
     def parse_card(self, card):

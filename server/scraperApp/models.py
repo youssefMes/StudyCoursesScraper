@@ -71,7 +71,7 @@ class Course(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
-    logo = models.OneToOneField(
+    logo = models.ForeignKey(
         'Logo',
         on_delete=models.SET_NULL,
         null=True

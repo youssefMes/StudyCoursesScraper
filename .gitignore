@@ -4,6 +4,7 @@ client/node_modules
 data/
 scraper/*.json
 server/.scrapy/
+server/static
 __pycache__/
 *.py[cod]
 # Django:
