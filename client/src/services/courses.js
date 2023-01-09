@@ -7,7 +7,8 @@ export const searchCourses = async ({
   degrees,
   languages,
   portals,
-  cities
+  cities,
+  search
 }) => {
   /*  console.log({
     study_forms,
@@ -26,6 +27,7 @@ export const searchCourses = async ({
   
   const response = await axiosInstance({
     url: `/courses/?limit=${limit}${page !== 1 ? `&page=${page}` : ""}
+    &search=${search}
     ${study_forms?.length > 0 ? `${getParam('study_forms', study_forms)}` : ''}
     ${degrees?.length > 0 ? `${getParam('degrees', degrees)}`  : ''}
     ${languages?.length > 0 ? `${getParam('languages', languages)}` : ''}

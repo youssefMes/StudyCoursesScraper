@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Box,
@@ -78,6 +78,12 @@ const SidebarContent = ({ onClose, ...rest }) => {
     degrees: [],
   });
   const [searchParams, setSearchParams] = useSearchParams({});
+  const search = searchParams.get("search");
+  const study_forms = searchParams.get("study_forms");
+  const degrees = searchParams.get("degrees");
+  const languages = searchParams.get("languages");
+  const cities = searchParams.get("cities");
+  const portals = searchParams.get("portals");
   const [filters, setFilters] = useState({
     checkboxes: [],
     dropdowns: [],
@@ -102,9 +108,33 @@ const SidebarContent = ({ onClose, ...rest }) => {
       }
     },
   });
-  
+  useEffect(() => {
+    const entries = Array.from(searchParams.entries())
+    let value = ''
+    let newForm = {}
+    for (const [key, val] of entries) {
+      value = val
+      if (key !== 'search') {
+        value = searchParams.get(key).split(',').filter(Boolean)
+      }
+      if (value) {
+        newForm = {...newForm, [key]: value}
+      }
+    }
+    setForm({
+      ...form,
+      ...newForm
+    })
+  }, [])
+  console.log('form', form);
+  const onCheckBoxChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    navigateTo({ ...form, [e.target.name]: e.target.value })
+
+  }
   const navigateTo = (form) => {
     const { search, study_forms, cities, portals, languages, degrees } = form;
+
     navigate({
       pathname: "/search",
       search: `?search=${search}&study_forms=${study_forms}&cities=${cities}&portals=${portals}&degrees=${degrees}&languages=${languages}`,
@@ -132,15 +162,16 @@ const SidebarContent = ({ onClose, ...rest }) => {
             <Input
               type="text"
               placeholder="Suche nach Studiengang"
-              name="keyword"
+              name="search"
+              focusBorderColor="primary"
               variant="primary"
+              defaultValue={search}
               onChange={(e) => {
                 setForm({ ...form, [e.target.name]: e.target.value });
-                navigateTo({ ...form, [e.target.name]: e.target.value })
               }}
             />
           </InputGroup>
-          <Button variant={"primary"}>Suchen</Button>
+          <Button variant={"primary"} onClick={() => navigateTo(form)}>Suchen</Button>
         </HStack>
         <Accordion defaultIndex={[0, 1, 2]} allowMultiple>
           <Stack divider={<StackDivider borderColor={"blackAlpha.300"} />}>
@@ -149,11 +180,9 @@ const SidebarContent = ({ onClose, ...rest }) => {
                   <CheckboxGroup
                     groupTitle={group.name}
                     options={group.items}
-                    onChange={(e) => {
-                      setForm({ ...form, [e.target.name]: e.target.value });
-                      navigateTo({ ...form, [e.target.name]: e.target.value })
-                    }}
+                    onChange={onCheckBoxChange}
                     name={group.key}
+                    defaultValue={form[group.key]}
                   />
                 </GridItem>
               ))}
@@ -179,7 +208,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
                       rightIcon={
                         <IoChevronDownOutline style={{ float: "right" }} />
                       }
-                    >
+                    > 
                       {form?.[group.key]?.length > 0
                         ? form?.[group.key]?.join(", ")
                         : `Select ${group.name}`}

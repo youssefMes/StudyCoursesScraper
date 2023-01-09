@@ -13,7 +13,8 @@ export default function CheckboxGroup({
   groupTitle,
   options = ["value"],
   name = "",
-  onChange
+  onChange,
+  defaultValue
 }) {
   function CustomRadio(props) {
     const { label, ...radioProps } = props;
@@ -44,7 +45,7 @@ export default function CheckboxGroup({
   };
 
   const { getCheckboxProps } = useCheckboxGroup({
-    defaultValue: "",
+    defaultValue: defaultValue,
     onChange: handleChange,
   });
 
@@ -59,7 +60,7 @@ export default function CheckboxGroup({
             <CustomRadio
               key={option}
               label={option}
-              {...getCheckboxProps({ value: option })}
+              {...getCheckboxProps({ value: option})}
             />
           );
         })}

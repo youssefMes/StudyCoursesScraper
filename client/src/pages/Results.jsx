@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import ResultsLayout from "../layout/ResultsLayout";
 import { searchCourses } from "../services/courses";
 import Banner from "../components/Banner";
@@ -28,6 +28,7 @@ export default function Results() {
   const languages = searchParams.get("languages");
   const cities = searchParams.get("cities");
   const portals = searchParams.get("portals");
+
   const {
     isLoading,
     isFetching: isFetchingNextPage,
@@ -41,6 +42,7 @@ export default function Results() {
         languages: languages ? languages.split(',') : undefined,
         cities: cities ? cities.split(','): undefined,
         portals: portals ? portals.split(',') : undefined,
+        search: search ? search : '',
       }),
     {
       refetchOnWindowFocus: false,
