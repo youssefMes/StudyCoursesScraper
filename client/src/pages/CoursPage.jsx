@@ -72,8 +72,8 @@ export default function CoursPage() {
             </GridItem>
             <GridItem rounded={"xl"}>
               <Image
-                src="/Rectangle 14.png"
-                alt="Cours image"
+                src={cours.logo?.image || '/Rectangle 14.png'}
+                alt={cours.name}
                 width="full"
                 height="full"
                 rounded="xl"
@@ -131,7 +131,7 @@ const InValidAlert = ({ invalidated_by }) => (
   >
     <AlertIcon boxSize="40px" mr={0} />
     <AlertTitle mt={4} mb={1} fontSize="lg">
-      Informationen validiert!
+      Informationen validieren!
     </AlertTitle>
     <AlertDescription maxWidth="sm">
       <When condition={Boolean(invalidated_by)}>
