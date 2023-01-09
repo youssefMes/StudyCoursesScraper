@@ -91,7 +91,7 @@ export default function InformationTab({ isStudyCheck, information, portal }) {
   //     return <h1>isStudyCheck</h1>;
   //   }
   return (
-    <Box bg="light" rounded="xl" p="4">
+    <Box bg="light" rounded="xl" p="4" mt="4">
       <Grid gridTemplateColumns={{ base: "1fr", md: "1fr" }} gap="2">
         {properties.map((property) => (
           <When key={property.title} condition={property.content}>

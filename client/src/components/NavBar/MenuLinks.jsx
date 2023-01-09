@@ -23,7 +23,7 @@ const MenuLinks = () => {
         <MenuItem to="/login">
           <Button bg="ghost">Einloggen</Button>{" "}
         </MenuItem>
-        <MenuItem to="/">
+        <MenuItem to="/register">
           <Button variant={"primary"}>Registrieren</Button>{" "}
         </MenuItem>
       </Stack>

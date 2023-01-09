@@ -1,21 +1,28 @@
 import axiosInstance from "../utils/axiosInstace";
 
 export const searchCourses = async ({
+  limit = 2,
+  page,
   keyword,
   abschluss,
   studienbeginn,
-  zulassungsmodus,
+  zulassungsmodus
 }) => {
-  console.log({
-    keyword,
-    abschluss,
-    studienbeginn,
-    zulassungsmodus,
+  // console.log({
+  //   keyword,
+  //   abschluss,
+  //   studienbeginn,
+  //   zulassungsmodus,
+  // });
+
+  const response = await axiosInstance({
+    url: `/courses/?limit=${limit}${page !== 1 ? `&page=${page}` : ""}`, // endpoint must be changed to filter courses
   });
-  return await axiosInstance({
-    method: "get",
-    url: `/courses/`, // endpoint must be changed to filter courses
-  }).then((res) => res.data);
+  return {
+    results: response.data.results,
+    nextPage: response.data.next,
+    totalPages: response.data.count,
+  };
 };
 
 export const fetchCourse = async (id) => {

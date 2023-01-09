@@ -9,6 +9,12 @@ import {
   IconButton,
   Image,
   Input,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  Select,
   Stack,
   Text,
   Tooltip,
@@ -16,14 +22,21 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import { IoChevronDownOutline } from "react-icons/io5";
 import CheckboxGroup from "../components/CheckboxGroup";
 import HomeLayout from "../layout/HomeLayout";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as BubbleMsg } from "../assets/bubble.svg";
 import desk from "../assets/desk.png";
 import { checkboxGroupItems } from "../utils/fakeData";
+import { useQuery } from "react-query";
+import { fetchFilters } from "../services/filters";
 
 export default function LandingPage() {
+  const [filters, setFilters] = useState({
+    checkboxes: [],
+    dropdowns: [],
+  });
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -31,6 +44,26 @@ export default function LandingPage() {
     zulassungsmodus: [],
     abschluss: [],
     studienbeginn: [],
+  });
+
+  const { isLoading: loadingFilters } = useQuery("filters", fetchFilters, {
+    onSuccess: (res) => {
+      const keys = Object.keys(res);
+      for (const key of keys) {
+        const elementLength = res[key].items.length;
+        if (elementLength > 3) {
+          setFilters((x) => ({
+            ...x,
+            dropdowns: [...x.dropdowns, { ...res[key], key }],
+          }));
+        } else {
+          setFilters((x) => ({
+            ...x,
+            checkboxes: [...x.checkboxes, { ...res[key], key }],
+          }));
+        }
+      }
+    },
   });
 
   const onChange = (e) => {
@@ -81,6 +114,7 @@ export default function LandingPage() {
             <IconButton
               onClick={onToggle}
               aria-label="Erweiterte Suche"
+              disabled={loadingFilters}
               icon={
                 <FaChevronDown
                   style={{
@@ -101,15 +135,62 @@ export default function LandingPage() {
               Erweiterte Suche
             </Heading>
             <Divider my="4" />
-            <Grid gridTemplateColumns={{ base: "1fr", md: "repeat(3,1fr)" }}>
-              {checkboxGroupItems.map((group) => (
+            <Grid
+              gridTemplateColumns={{ base: "1fr", md: "repeat(3,1fr)" }}
+              gap="5"
+            >
+              {filters.checkboxes.map((group) => (
                 <GridItem key={group.name}>
                   <CheckboxGroup
-                    groupTitle={group.groupTitle}
-                    options={group.options}
+                    groupTitle={group.name}
+                    options={group.items}
                     onChange={onChange}
-                    name={group.name}
+                    name={group.key}
                   />
+                </GridItem>
+              ))}
+              {filters.dropdowns.map((group) => (
+                <GridItem key={group.name}>
+                  <Menu closeOnSelect={false}>
+                    <Heading as="h3" fontSize="lg">
+                      {group.name}
+                    </Heading>
+                    <MenuButton
+                      mt="2"
+                      noOfLines={1}
+                      maxW="250px"
+                      bg="white"
+                      w="full"
+                      as={Button}
+                      border="1px solid black"
+                      rounded="md"
+                      display="flex"
+                      textAlign={"left"}
+                      alignItems={"flex-start"}
+                      fontWeight={"normal"}
+                      rightIcon={
+                        <IoChevronDownOutline style={{ float: "right" }} />
+                      }
+                    >
+                      {form?.[group.key]?.length > 0
+                        ? form?.[group.key]?.join(", ")
+                        : `Select ${group.name}`}
+                    </MenuButton>
+                    <MenuList minWidth="240px">
+                      <MenuOptionGroup
+                        type="checkbox"
+                        onChange={(val) =>
+                          setForm({ ...form, [group.key]: val })
+                        }
+                      >
+                        {group.items.map((item) => (
+                          <MenuItemOption value={item} key={item}>
+                            {item}
+                          </MenuItemOption>
+                        ))}
+                      </MenuOptionGroup>
+                    </MenuList>
+                  </Menu>
                 </GridItem>
               ))}
             </Grid>

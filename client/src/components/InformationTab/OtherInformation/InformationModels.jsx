@@ -20,7 +20,7 @@ export default function InformationModels({ models }) {
     <Accordion allowMultiple border="none">
       <Stack spacing={3}>
         {models.map((model) => (
-          <AccordionItem border="none">
+          <AccordionItem border="none" key={model.name}>
             {({ isExpanded }) => (
               <>
                 <AccordionButton

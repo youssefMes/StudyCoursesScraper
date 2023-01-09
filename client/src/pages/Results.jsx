@@ -1,25 +1,26 @@
 import {
+  Button,
+  Center,
   Container,
   Flex,
-  Grid,
-  GridItem,
   Heading,
-  HStack,
-  IconButton,
-  Image,
   Spinner,
   Stack,
   Tag,
   Text,
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import ResultsLayout from "../layout/ResultsLayout";
 import { searchCourses } from "../services/courses";
 import Banner from "../components/Banner";
-import { BsStar, BsBookmark } from "react-icons/bs";
+import { BsStar } from "react-icons/bs";
+import CoursCard from "../components/CoursCard";
+import { useState } from "react";
 
 export default function Results() {
+  const [courses, setCourses] = useState({ results: [] });
+  const [page, setPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams({});
   const keyword = searchParams.get("q");
   const abschluss = searchParams.get("abschluss");
@@ -27,16 +28,33 @@ export default function Results() {
   const zulassungsmodus = searchParams.get("zulassungsmodus");
 
   const {
-    data: data,
     isLoading,
+    isFetching: isFetchingNextPage,
     isError,
-  } = useQuery([keyword], () =>
-    searchCourses({
-      keyword,
-      abschluss,
-      studienbeginn,
-      zulassungsmodus,
-    })
+  } = useQuery(
+    [keyword, page, abschluss],
+    () =>
+      searchCourses({
+        keyword,
+        abschluss,
+        studienbeginn,
+        zulassungsmodus,
+        page,
+      }),
+    {
+      refetchOnWindowFocus: false,
+      keepPreviousData: true,
+      onSuccess: (response) => {
+        if (response.nextPage !== courses?.nextPage) {
+          setCourses((prevState) => ({
+            ...response,
+            results: [...prevState.results, ...response.results],
+          }));
+        } else {
+          setCourses(response);
+        }
+      },
+    }
   );
 
   if (isLoading) {
@@ -59,83 +77,47 @@ export default function Results() {
   }
   return (
     <ResultsLayout>
-      <Container maxW="8xl">
-        <Text>{data.results?.length} Ergebnisse für</Text>
+      <Container maxW="8xl" mb="8">
+        <Text>{courses.results?.length} Ergebnisse für</Text>
         <Heading as="h1" color="secondary" fontWeight="normal" mb="8">
           {keyword ?? "Medieninformatik"}
         </Heading>
         <Stack spacing={6}>
-          {data.results.map((cours) => (
-            <Grid
-              key={cours.id}
-              gridTemplateColumns={{
-                base: "1fr",
-                md: "minmax(200px, 0.25fr) 1fr",
-              }}
-              bg="light"
-              rounded={"xl"}
-              p="4"
-              gap="8"
-            >
-              <GridItem>
-                <Image
-                  src={cours.logo?.image || "/Rectangle 14.png"}
-                  alt="bla bla"
-                  width="100%"
-                  maxHeight="250px"
-                  objectFit="contain"
-                />
-              </GridItem>
-              <GridItem>
-                <Stack spacing={8}>
-                  <Stack>
-                    <HStack justifyContent={"space-between"}>
-                      <Text color="muted" fontWeight={400}>
-                        {cours.information.university}
-                      </Text>
-                      <IconButton
-                        variant="primary"
-                        icon={<BsBookmark />}
-                        aria-label="bookmark cours"
-                        size="sm"
-                      />
-                    </HStack>
-                    <Link to={`/courses/${cours.id}`}>
-                      <Heading
-                        as="h1"
-                        fontWeight={"bold"}
-                        fontSize="2xl"
-                        noOfLines={3}
-                        wordBreak="break-word"
-                      >
-                        {cours.name}
-                      </Heading>
-                    </Link>
-                  </Stack>
-                  <Stack>
-                    <Text color="muted" fontWeight={600} opacity={0.7}>
-                      {cours.information.degree}
-                    </Text>
-                    <Tag
-                      bg="primary"
-                      color="black"
-                      alignSelf={"flex-start"}
-                      gap="5px"
-                      alignItems={"center"}
-                      display="flex"
-                    >
-                      <Text as="span" lineHeight="normal">
-                        4.8
-                      </Text>{" "}
-                      <BsStar fontSize={"12px"} />
-                    </Tag>
-                  </Stack>
-                </Stack>
-              </GridItem>
-            </Grid>
+          {courses.results.map((cours) => (
+            <CoursCard cours={cours} key={cours.id} />
           ))}
+          {isFetchingNextPage && (
+            <Center>
+              <Spinner size={"md"} color="gold-yellow" />
+            </Center>
+          )}
+          {courses.nextPage && !isFetchingNextPage && (
+            <Button
+              alignSelf={"center"}
+              variant="primary"
+              onClick={() => setPage((prevState) => prevState + 1)}
+            >
+              Nächste Seite
+            </Button>
+          )}
         </Stack>
       </Container>
     </ResultsLayout>
   );
 }
+
+export const RateTag = ({ rate = 4.8 }) => (
+  <Tag
+    bg="primary"
+    color="black"
+    alignSelf={"flex-start"}
+    gap="5px"
+    alignItems={"center"}
+    display="flex"
+  >
+    <Text as="span" lineHeight="normal">
+      {rate}
+    </Text>{" "}
+    <BsStar fontSize={"12px"} />
+  </Tag>
+);

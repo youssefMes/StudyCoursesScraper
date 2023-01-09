@@ -24,6 +24,7 @@ import { BiFilterAlt, BiMinus, BiPlus } from "react-icons/bi";
 import { FiSearch } from "react-icons/fi";
 import { checkboxGroupItems } from "../utils/fakeData";
 import CheckboxGroup from "../components/CheckboxGroup";
+import { useSearchParams } from "react-router-dom";
 
 export default function ResultsLayout({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -57,8 +58,11 @@ export default function ResultsLayout({ children }) {
 
 const SidebarContent = ({ onClose, ...rest }) => {
   const [form, setForm] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams({});
+
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    // setSearchParams((x) => ({ ...x, [e.target.name]: e.target.value }));
   };
   return (
     <Box

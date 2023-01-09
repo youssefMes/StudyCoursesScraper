@@ -11,7 +11,7 @@ import {
 
 export default function CheckboxGroup({
   groupTitle,
-  options = [{ value: "value", label: "label" }],
+  options = ["value"],
   name = "",
   onChange
 }) {
@@ -57,9 +57,9 @@ export default function CheckboxGroup({
         {options.map((option) => {
           return (
             <CustomRadio
-              key={option.value}
-              label={option.label}
-              {...getCheckboxProps({ value: option.label })}
+              key={option}
+              label={option}
+              {...getCheckboxProps({ value: option })}
             />
           );
         })}

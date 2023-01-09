@@ -1,7 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
+  Button,
   Container,
   Grid,
   GridItem,
@@ -19,6 +24,8 @@ import {
 import { fetchCourse } from "../services/courses";
 import Banner from "../components/Banner";
 import InformationTab from "../components/InformationTab";
+import BewertungenTab from "../components/BewertungenTab";
+import When from "../components/When";
 
 export default function CoursPage() {
   const { courseId } = useParams();
@@ -44,6 +51,7 @@ export default function CoursPage() {
   }
 
   const isStudyCheck = cours.portal.name === "studyCheck";
+  const haveComments = cours?.evaluation_count > 0;
 
   return (
     <Container maxW="7xl" pt="32">
@@ -75,6 +83,7 @@ export default function CoursPage() {
             </GridItem>
           </Grid>
         </Box>
+        {cours.is_valid ? <ValidAlert /> : <InValidAlert />}
         <Tabs variant="line" isFitted size={"lg"}>
           <TabList>
             <Tab _selected={{ borderColor: "purple", color: "purple" }}>
@@ -82,7 +91,7 @@ export default function CoursPage() {
             </Tab>
             <Tab
               _selected={{ borderColor: "purple", color: "purple" }}
-              isDisabled={!isStudyCheck}
+              isDisabled={!haveComments}
             >
               Bewertungen
             </Tab>
@@ -96,7 +105,11 @@ export default function CoursPage() {
               />
             </TabPanel>
             <TabPanel>
-              <p>Bewertungen!</p>
+              <BewertungenTab
+                comments={cours?.comments}
+                percentages={cours.percentages}
+                stars={cours?.stars}
+              />
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -104,3 +117,66 @@ export default function CoursPage() {
     </Container>
   );
 }
+
+const InValidAlert = ({ invalidated_by }) => (
+  <Alert
+    status="info"
+    variant="subtle"
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    textAlign="center"
+    height="200px"
+    rounded="xl"
+  >
+    <AlertIcon boxSize="40px" mr={0} />
+    <AlertTitle mt={4} mb={1} fontSize="lg">
+      Informationen validiert!
+    </AlertTitle>
+    <AlertDescription maxWidth="sm">
+      <When condition={Boolean(invalidated_by)}>
+        <Text>
+          Die Informationen wurden von{" "}
+          {invalidated_by?.first_name + " " + invalidated_by?.last_name}{" "}
+          ungültig markiert
+        </Text>
+      </When>
+      <When condition={!Boolean(invalidated_by)}>
+        <Text>
+          Hier können Sie die Informationen überprüfen und dann validieren
+        </Text>
+      </When>
+    </AlertDescription>
+    <Button variant={"ghost"} bg="white">
+      Validieren
+    </Button>
+  </Alert>
+);
+const ValidAlert = ({ validated_by }) => (
+  <Alert
+    status="success"
+    variant="subtle"
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    textAlign="center"
+    height="200px"
+    rounded="xl"
+  >
+    <AlertIcon boxSize="40px" mr={0} />
+    <AlertTitle mt={4} mb={1} fontSize="lg">
+      Informationen ungültich machen!
+    </AlertTitle>
+    <AlertDescription maxWidth="sm">
+      <When condition={Boolean(validated_by)}>
+        <Text>
+          Die Informationen wurden von{" "}
+          {validated_by?.first_name + " " + validated_by?.last_name} validiert
+        </Text>
+      </When>
+    </AlertDescription>
+    <Button variant={"ghost"} bg="white">
+      Ungültig machen
+    </Button>
+  </Alert>
+);
