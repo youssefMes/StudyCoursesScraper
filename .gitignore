@@ -10,3 +10,12 @@ __pycache__/
 # Django:
 *.log
 *.pot
+
+client/.pnp.*
+client/.yarn/*
+!client/.yarn/patches
+!client/.yarn/plugins
+!client/.yarn/releases
+!client/.yarn/sdks
+!client/.yarn/versions
+!client/.yarn/cache

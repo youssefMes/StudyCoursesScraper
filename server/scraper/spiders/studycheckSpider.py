@@ -77,31 +77,33 @@ class StudycheckSpider(Spider):
         comments = []
         resp = yield Request(response._url + '/bewertungen')
         headline = resp.xpath('normalize-space(//h2[@class="reports-headline"])').extract_first()
-        evaluation_count = findall(r'\d+', headline)[0]
-        star_reports = self.parse_item_reports(response=resp)
-        reports_stats = self.parse_item_statistics(response=resp)
-        comments += self.parse_item_evaluations(response=resp)
-        next_page = resp.xpath('//ul[@class="pagination"]/li[last()]/a/@href').extract_first()                 
-        if isinstance(next_page, str):
-            next_page = next_page.split('/')[-1]   
-        while (next_page): 
-            next_page_url = ''
-            url_parts = resp._url.split('/')
-            last_part = url_parts[-1] 
-            if ('seite' in last_part):
-                url_parts[-1:] = [next_page]
-                next_page_url = '/'.join(url_parts)
-            else:
-                next_page_url = resp._url + '/' + next_page
-            resp = yield Request(next_page_url)
+        headline_parts = findall(r'\d+', headline)
+        evaluation_count = headline_parts[0] if len(headline_parts) > 0 else None
+        if evaluation_count and int(evaluation_count) > 0:
+            star_reports = self.parse_item_reports(response=resp)
+            reports_stats = self.parse_item_statistics(response=resp)
             comments += self.parse_item_evaluations(response=resp)
-            next_page = resp.xpath('//ul[@class="pagination"]/li[last()]/a/@href').extract_first()
-            next_page = next_page.split('/')[-1] if next_page else None
+            next_page = resp.xpath('//ul[@class="pagination"]/li[last()]/a/@href').extract_first()                 
+            if isinstance(next_page, str):
+                next_page = next_page.split('/')[-1]   
+            while (next_page): 
+                next_page_url = ''
+                url_parts = resp._url.split('/')
+                last_part = url_parts[-1] 
+                if ('seite' in last_part):
+                    url_parts[-1:] = [next_page]
+                    next_page_url = '/'.join(url_parts)
+                else:
+                    next_page_url = resp._url + '/' + next_page
+                resp = yield Request(next_page_url)
+                comments += self.parse_item_evaluations(response=resp)
+                next_page = resp.xpath('//ul[@class="pagination"]/li[last()]/a/@href').extract_first()
+                next_page = next_page.split('/')[-1] if next_page else None
 
-        loader.add_value('comments', comments)
-        loader.add_value('star_reports', star_reports)
-        loader.add_value('reports_stats', reports_stats)
-        loader.add_value('evaluation_count', evaluation_count)
+            loader.add_value('comments', comments)
+            loader.add_value('star_reports', star_reports)
+            loader.add_value('reports_stats', reports_stats)
+            loader.add_value('evaluation_count', evaluation_count)
         yield loader.load_item()
 
     @staticmethod    
@@ -142,7 +144,7 @@ class StudycheckSpider(Spider):
                 name = item.xpath('normalize-space(strong[@class="criteria-name"])').extract_first()
             else:
                 name = item.xpath('normalize-space(span[@class="criteria-name"])').extract_first()
-            value = item.xpath('normalize-space(//div[@class="rating-value"])').extract_first()
+            value = item.xpath('normalize-space(div/div[@class="rating-value"])').extract_first()
             star_reports.append({
                 'name': name,
                 'value': value

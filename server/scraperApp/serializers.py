@@ -36,6 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'is_active', 'is_staff')
+
 class CourseSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(source='comment_set', many=True)
     stars = StarSerializer(source='star_set', many=True)
@@ -52,9 +53,10 @@ class CourseSerializer(serializers.ModelSerializer):
 class BookmarkSerializer(serializers.ModelSerializer):
     course_name = serializers.ReadOnlyField(source='course.name')
     university = serializers.ReadOnlyField(source='course.information.university')
+    logo = serializers.ReadOnlyField(source='course.logo.image')
     class Meta:
         model = Bookmark
-        fields = ('user' ,'course_name','university', 'course')
+        fields = ('user' ,'course_name','university', 'course', 'logo')
         extra_kwargs = {
             'user': {'write_only': True},
         }
