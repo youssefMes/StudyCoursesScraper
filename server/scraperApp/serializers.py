@@ -73,7 +73,7 @@ class ExtendedUserSerializer(UserSerializer):
     bookmarked_courses = serializers.SerializerMethodField()
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
-        fields = ('id', 'password','first_name', 'last_name', 'email', 'is_active', 'is_staff', 'bookmarked_courses')
+        fields = ('id','first_name', 'last_name', 'email', 'is_active', 'is_staff', 'bookmarked_courses')
 
     def get_bookmarked_courses(self, obj):
         return obj.bookmark_set.all().values_list('course_id', flat=True) 
