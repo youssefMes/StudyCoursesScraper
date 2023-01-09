@@ -60,7 +60,7 @@ export default function CheckboxGroup({
             <CustomRadio
               key={option}
               label={option}
-              {...getCheckboxProps({ value: option})}
+              {...getCheckboxProps({ value: option })}
             />
           );
         })}
