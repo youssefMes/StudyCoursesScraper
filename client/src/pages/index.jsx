@@ -1,5 +1,17 @@
 import LandingPage from "./LandingPage";
 import CoursPage from "./CoursPage";
 import Results from "./Results";
+import Activate from "./Activate";
+import Login from "./Login";
+import Register from "./Register";
+import BookMarks from "./BookMarks";
 
-export { LandingPage, CoursPage, Results };
+export {
+  LandingPage,
+  CoursPage,
+  Results,
+  Activate,
+  Login,
+  Register,
+  BookMarks,
+};

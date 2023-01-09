@@ -25,3 +25,14 @@ export const bookmarkCours = async ({ id, userId }) => {
     },
   }).then((res) => res.data);
 };
+
+export const deleteBookmarkCours = async ({ id }) => {
+  const token = localStorage.getItem("token");
+  return await axiosInstance({
+    method: "delete",
+    url: `/bookmarks/${id}/`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => res.data);
+};

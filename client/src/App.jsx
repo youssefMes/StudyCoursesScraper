@@ -1,11 +1,15 @@
 import { Route, BrowserRouter, Routes, Navigate } from "react-router-dom";
 import { NavBar, Footer } from "./components/index";
-import Activate from "./pages/Activate";
-import { LandingPage, Results, CoursPage } from "./pages/index";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import {
+  LandingPage,
+  CoursPage,
+  Results,
+  Activate,
+  Login,
+  Register,
+  BookMarks,
+} from "./pages/index";
 import AuthProvider, { useAuthProvider } from "./context/authProvider";
-import BookMarks from "./pages/BookMarks";
 
 const App = () => {
   return (

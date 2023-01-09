@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 const Footer = () => {
   const { pathname } = useLocation();
-  const pathnames = ["/register", "/login", "/activate"]
+  const pathnames = ["/register", "/login", "/activate"];
 
   if (!pathnames.includes(pathname)) {
     return (

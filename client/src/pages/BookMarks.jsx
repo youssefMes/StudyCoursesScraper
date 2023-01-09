@@ -1,10 +1,14 @@
-import { Heading, Spinner, Stack } from "@chakra-ui/react";
+import { Heading, Spinner, Stack, Container, Box } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import CoursCard from "../components/CoursCard";
+import BookmarkCard from "../components/BookmarkCard";
 import { fetchBookmarks } from "../services/bookmarks";
 
 export default function BookMarks() {
-  const { data: bookmarks, isLoading } = useQuery("bookmarks", fetchBookmarks);
+  const {
+    data: bookmarks,
+    isLoading,
+    refetch,
+  } = useQuery("bookmarks", fetchBookmarks);
 
   if (isLoading) {
     return (
@@ -15,11 +19,47 @@ export default function BookMarks() {
   }
 
   return (
-    <Stack>
-      <Heading color="secondary">Merkliste</Heading>
-      {bookmarks.results.map((bookmark) => (
-        <CoursCard cours={bookmark} key={bookmark.id} />
-      ))}
-    </Stack>
+    <Box minH="100vh" bg={"white"} paddingTop={"72px"}>
+      {/* <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} /> */}
+      <Box p="4" pt="8">
+        <Container maxW="8xl" mb="8">
+          <Heading as="h1" color="secondary" fontWeight="normal" mb="8">
+            Bookmarks
+          </Heading>
+          <Stack spacing={6}>
+            {bookmarks.results.map((bookmark) => (
+              <BookmarkCard
+                bookmark={bookmark}
+                key={bookmark.id}
+                refetch={refetch}
+              />
+            ))}
+          </Stack>
+        </Container>
+      </Box>
+    </Box>
   );
 }
+
+const MobileNav = ({ onOpen, ...rest }) => {
+  return (
+    <Flex
+      ml={{ base: 0, md: 60 }}
+      px={{ base: 4, md: 24 }}
+      height="20"
+      alignItems="center"
+      justifyContent="flex-start"
+      position="sticky"
+      top="71px"
+      background="white"
+      {...rest}
+    >
+      <IconButton
+        variant="outline"
+        onClick={onOpen}
+        aria-label="open menu"
+        icon={<BiFilterAlt />}
+      />
+    </Flex>
+  );
+};

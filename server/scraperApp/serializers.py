@@ -56,7 +56,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
     logo = serializers.ReadOnlyField(source='course.logo.image')
     class Meta:
         model = Bookmark
-        fields = ('user' ,'course_name','university', 'course', 'logo')
+        fields = ('user' ,'course_name','university', 'course', 'logo', 'id')
         extra_kwargs = {
             'user': {'write_only': True},
         }

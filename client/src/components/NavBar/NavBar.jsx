@@ -51,7 +51,9 @@ const NavBar = ({ ...props }) => {
             alignItems="center"
             wrap="wrap"
           >
-            <Logo />
+            <Link to="/">
+              <Logo />
+            </Link>
             <IconButton
               onClick={onToggle}
               icon={
