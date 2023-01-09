@@ -9,7 +9,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from operator import or_
 from functools import reduce
 from django.db.models import Q
-
+from rest_framework.renderers import JSONRenderer
+from rest_framework.decorators import api_view, renderer_classes
+import json
+from django.http import HttpResponse
 class Pagination(LimitOffsetPagination):
     page_size = 50
     max_page_size = 500
@@ -98,41 +101,41 @@ class BookmarkView(viewsets.ViewSet):
             'message': 'Bookmark deleted Successfully'
         })
 
-
-class FiltersView(generics.ListCreateAPIView):  
+@api_view(('GET',))
+def filtersView(request):  
     queryset = Course.objects.values(
         'portal__name', 'information__city', 'information__degree', 'information__study_form', 'information__languages'
     ).distinct()
     
-    def list(self, request):
-        queryset = self.get_queryset()
-        cities = []
-        degrees = ['Master', 'Bachelor']
-        study_forms = []
-        portals = []
-        languages = []
-        for item in queryset:
-            if item['portal__name'] not in portals:
-                portals.append(item['portal__name'])
-            if not any(deg in item['information__degree'] for deg in degrees):
-                degrees.append(item['information__degree'])
-            if item['information__languages']:
-                for l in item['information__languages'].split(','):
-                    if l not in languages:
-                        languages.append(l)
+    cities = []
+    degrees = ['Master', 'Bachelor']
+    study_forms = []
+    portals = []
+    languages = []
+    for item in queryset:
+        if item['portal__name'] not in portals:
+            portals.append(item['portal__name'])
+        if not any(deg in item['information__degree'] for deg in degrees):
+            degrees.append(item['information__degree'])
+        if item['information__languages']:
+            for l in item['information__languages'].split(','):
+                if l not in languages:
+                    languages.append(l)
+        if item['information__study_form']:
             for form in item['information__study_form'].split(','):
                 if not any(form in item for item in study_forms):
                     study_forms.append(form)
-            
+        if item['information__city']:
             for location in item['information__city'].split(','):
                 if  location not in cities:
                     cities.append(location)
-        return Response(
-                    {
-                        'cities': {'name': 'Standort', 'items': sorted(cities)},
-                        'degrees': {'name': 'Abschulss', 'items': degrees},
-                        'study_forms': {'name': 'Studienform', 'items': sorted(study_forms)},
-                        'portals': {'name': 'Portal', 'items': sorted(portals)},
-                        'languages': {'name': 'Unterrichtssprachen', 'items': sorted(languages)}
-                    }
-                )
+    return HttpResponse(json.dumps(
+                {
+                    'cities': {'name': 'Standort', 'items': sorted(cities)},
+                    'degrees': {'name': 'Abschulss', 'items': degrees},
+                    'study_forms': {'name': 'Studienform', 'items': sorted(study_forms)},
+                    'portals': {'name': 'Portal', 'items': sorted(portals)},
+                    'languages': {'name': 'Unterrichtssprachen', 'items': sorted(languages)}
+                })
+            )
+        

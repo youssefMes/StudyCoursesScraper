@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers                 
-from scraperApp.views import CourseView, BookmarkView, FiltersView                       
+from scraperApp.views import CourseView, BookmarkView, filtersView                       
 
 router = routers.DefaultRouter()                   
 router.register(r'courses', CourseView)  
@@ -26,5 +26,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path("api/", include("djoser.urls")),
     path("api/", include("djoser.urls.jwt")),
-    path("api/filters/", FiltersView.as_view()),
+    path("api/filters/", filtersView),
 ]
