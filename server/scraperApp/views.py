@@ -79,7 +79,7 @@ class BookmarkView(viewsets.ViewSet):
         paginator = Pagination()
         page = paginator.paginate_queryset(bookmarks, self.request)
         if page is not None:
-            serializer = BookmarkSerializer(page, many=True)
+            serializer = BookmarkSerializer(page, many=True, context={"request":request})
             return paginator.get_paginated_response(serializer.data)
 
         serializer = BookmarkSerializer(self.queryset, many=True)

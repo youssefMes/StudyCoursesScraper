@@ -20,10 +20,9 @@ export default function BookMarks() {
 
   return (
     <Box minH="100vh" bg={"white"} paddingTop={"72px"}>
-      {/* <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} /> */}
       <Box p="4" pt="8">
         <Container maxW="8xl" mb="8">
-          <Heading as="h1" color="secondary" fontWeight="normal" mb="8">
+          <Heading as="h1" color="primary" fontWeight="normal" mb="8">
             Bookmarks
           </Heading>
           <Stack spacing={6}>

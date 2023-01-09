@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Bookmark, Information, Percentage, Portal, Star, User, Course, Comment, Logo
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from djoser.serializers import UserSerializer, UserCreateSerializer as BaseUserCreateSerializer
 
 class LogoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,6 +32,17 @@ class InformationSerializer(serializers.ModelSerializer):
         model = Information
         fields = '__all__'
 
+class BookmarkSerializer(serializers.ModelSerializer):
+    course_name = serializers.ReadOnlyField(source='course.name')
+    university = serializers.ReadOnlyField(source='course.information.university')
+    logo = serializers.ImageField(source='course.logo.image', use_url=True, required=False)
+    class Meta:
+        model = Bookmark
+        fields = ('user' ,'course_name','university', 'course', 'id', 'logo')
+        extra_kwargs = {
+            'user': {'write_only': True},
+        }
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -50,17 +61,6 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = ('id' ,'name' , 'evaluation_count', 'information', 'link', 'portal', 'comments', 'stars', 'percentages', 'logo', 'is_valid', 'validated_by', 'invalidated_by')
 
-class BookmarkSerializer(serializers.ModelSerializer):
-    course_name = serializers.ReadOnlyField(source='course.name')
-    university = serializers.ReadOnlyField(source='course.information.university')
-    logo = serializers.ReadOnlyField(source='course.logo.image')
-    class Meta:
-        model = Bookmark
-        fields = ('user' ,'course_name','university', 'course', 'logo', 'id')
-        extra_kwargs = {
-            'user': {'write_only': True},
-        }
-
 class UserCreateSerializer(BaseUserCreateSerializer):
     def create(self, validated_data):
         return User.objects.create_superuser(**validated_data)
@@ -68,3 +68,12 @@ class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = ('password','first_name', 'last_name', 'email', 'is_active', 'is_staff')
+
+class ExtendedUserSerializer(UserSerializer):
+    bookmarked_courses = serializers.SerializerMethodField()
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = ('id', 'password','first_name', 'last_name', 'email', 'is_active', 'is_staff', 'bookmarked_courses')
+
+    def get_bookmarked_courses(self, obj):
+        return obj.bookmark_set.all().values_list('course_id', flat=True) 

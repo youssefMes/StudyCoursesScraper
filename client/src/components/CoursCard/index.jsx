@@ -19,12 +19,15 @@ import { bookmarkCours } from "../../services/bookmarks";
 export default function CoursCard({ cours }) {
   const { mutateAsync, isLoading, isSuccess } = useMutation(bookmarkCours);
   const { data } = useAuthProvider();
-
+  const { bookmarked_courses } = data
   const bookmark = () => {
-    mutateAsync({
-      userId: data.id,
-      id: cours.id,
-    });
+    if (!bookmarked_courses.includes(cours.id)) {
+      mutateAsync({
+        userId: data.id,
+        id: cours.id,
+      });
+      bookmarked_courses.push(cours.id)
+    }
   };
 
   return (
@@ -57,7 +60,7 @@ export default function CoursCard({ cours }) {
               </Text>
               <IconButton
                 variant="primary"
-                icon={isSuccess ? <BsBookmarkFill /> : <BsBookmark />}
+                icon={isSuccess || bookmarked_courses.includes(cours.id) ? <BsBookmarkFill /> : <BsBookmark />}
                 aria-label="bookmark cours"
                 size="sm"
                 display={data ? "flex" : "none"}

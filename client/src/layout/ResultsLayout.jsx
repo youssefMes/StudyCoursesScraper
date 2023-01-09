@@ -211,9 +211,9 @@ const SidebarContent = ({ onClose, ...rest }) => {
                     > 
                       {form?.[group.key]?.length > 0
                         ? form?.[group.key]?.join(", ")
-                        : `Select ${group.name}`}
+                        : `${group.name} Auswählen`}
                     </MenuButton>
-                    <MenuList minWidth="240px" h={40} sx={{overflow:"scroll"}}>
+                    <MenuList minWidth="240px" h="200px" overflowY={'scroll'}>
                       <MenuOptionGroup
                         type="checkbox"
                         onChange={(val) => {

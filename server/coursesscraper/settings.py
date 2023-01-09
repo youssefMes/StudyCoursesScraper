@@ -177,6 +177,7 @@ DJOSER = {
     "SEND_ACTIVATION_EMAIL": True,
     "SERIALIZERS": {
         "user_create_password_retype": "scraperApp.serializers.UserCreateSerializer",
+        "current_user": "scraperApp.serializers.ExtendedUserSerializer",
     },
 }
 

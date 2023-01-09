@@ -177,7 +177,7 @@ export default function LandingPage() {
                     >
                       {form?.[group.key]?.length > 0
                         ? form?.[group.key]?.join(", ")
-                        : `Select ${group.name}`}
+                        : `${group.name} Auswhälen`}
                     </MenuButton>
                     <MenuList minWidth="240px" h={40} sx={{overflow:"scroll"}}>
                       <MenuOptionGroup
