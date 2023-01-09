@@ -22,24 +22,25 @@ export default function Results() {
   const [courses, setCourses] = useState({ results: [] });
   const [page, setPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams({});
-  const keyword = searchParams.get("q");
-  const abschluss = searchParams.get("abschluss");
-  const studienbeginn = searchParams.get("studienbeginn");
-  const zulassungsmodus = searchParams.get("zulassungsmodus");
-
+  const search = searchParams.get("search");
+  const study_forms = searchParams.get("study_forms");
+  const degrees = searchParams.get("degrees");
+  const languages = searchParams.get("languages");
+  const cities = searchParams.get("cities");
+  const portals = searchParams.get("portals");
   const {
     isLoading,
     isFetching: isFetchingNextPage,
     isError,
   } = useQuery(
-    [keyword, page, abschluss],
+    [search, page, study_forms, degrees, languages, cities, portals],
     () =>
       searchCourses({
-        keyword,
-        abschluss,
-        studienbeginn,
-        zulassungsmodus,
-        page,
+        study_forms: study_forms  ? study_forms.split(',') : undefined,
+        degrees: degrees ? degrees.split(',') : undefined,
+        languages: languages ? languages.split(',') : undefined,
+        cities: cities ? cities.split(','): undefined,
+        portals: portals ? portals.split(',') : undefined,
       }),
     {
       refetchOnWindowFocus: false,
@@ -48,7 +49,7 @@ export default function Results() {
         if (response.nextPage !== courses?.nextPage) {
           setCourses((prevState) => ({
             ...response,
-            results: [...prevState.results, ...response.results],
+            results: [...response.results],
           }));
         } else {
           setCourses(response);
@@ -78,9 +79,9 @@ export default function Results() {
   return (
     <ResultsLayout>
       <Container maxW="8xl" mb="8">
-        <Text>{courses.results?.length} Ergebnisse für</Text>
+        <Text>{courses.count} Ergebnisse für</Text>
         <Heading as="h1" color="secondary" fontWeight="normal" mb="8">
-          {keyword ?? "Medieninformatik"}
+          {search ?? ""}
         </Heading>
         <Stack spacing={6}>
           {courses.results.map((cours) => (

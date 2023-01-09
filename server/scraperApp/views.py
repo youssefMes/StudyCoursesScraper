@@ -38,15 +38,15 @@ class CourseView(viewsets.ModelViewSet):
         languages =  self.request.GET.getlist('languages')        
         
         if cities:
-            queryset=queryset.filter(reduce(or_, [Q(information__city__icontains=city) for city in cities]))
+            queryset=queryset.filter(reduce(or_, [Q(information__city__icontains=city.strip()) for city in cities]))
         if degrees:
-            queryset=queryset.filter(reduce(or_, [Q(information__degree__icontains=degree) for degree in degrees]))
+            queryset=queryset.filter(reduce(or_, [Q(information__degree__icontains=degree.strip()) for degree in degrees]))
         if study_forms:
-            queryset=queryset.filter(reduce(or_, [Q(information__study_form__icontains=study_form) for study_form in study_forms]))
+            queryset=queryset.filter(reduce(or_, [Q(information__study_form__icontains=study_form.strip()) for study_form in study_forms]))
         if portals:
-            queryset=queryset.filter(reduce(or_, [Q(portal__name=portal) for portal in portals]))
+            queryset=queryset.filter(reduce(or_, [Q(portal__name=portal.strip()) for portal in portals]))
         if languages:
-            queryset=queryset.filter(reduce(or_, [Q(information__languages__icontains=language) for language in languages]))
+            queryset=queryset.filter(reduce(or_, [Q(information__languages__icontains=language.strip()) for language in languages]))
 
         return queryset
     

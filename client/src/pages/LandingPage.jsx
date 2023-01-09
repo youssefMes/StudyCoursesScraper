@@ -40,10 +40,12 @@ export default function LandingPage() {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    keyword: "",
-    zulassungsmodus: [],
-    abschluss: [],
-    studienbeginn: [],
+    search: "",
+    study_forms: [],
+    cities: [],
+    portals: [],
+    languages: [],
+    degrees: [],
   });
 
   const { isLoading: loadingFilters } = useQuery("filters", fetchFilters, {
@@ -72,10 +74,11 @@ export default function LandingPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { keyword, abschluss, studienbeginn, zulassungsmodus } = form;
+    const { search, study_forms, cities, portals, languages, degrees } = form;
+    console.log('form', form);
     navigate({
       pathname: "/search",
-      search: `?q=${keyword}&abschluss=${abschluss}&studienbeginn=${studienbeginn}&zulassungsmodus=${zulassungsmodus}`,
+      search: `?search=${search}&study_forms=${study_forms}&cities=${cities}&portals=${portals}&degrees=${degrees}&languages=${languages}`,
     });
   };
 
@@ -102,7 +105,7 @@ export default function LandingPage() {
             type="text"
             placeholder="Suche nach Studiengang"
             variant="primary"
-            name="keyword"
+            name="search"
             onChange={onChange}
             p="4"
             size="lg"
@@ -176,7 +179,7 @@ export default function LandingPage() {
                         ? form?.[group.key]?.join(", ")
                         : `Select ${group.name}`}
                     </MenuButton>
-                    <MenuList minWidth="240px">
+                    <MenuList minWidth="240px" h={40} sx={{overflow:"scroll"}}>
                       <MenuOptionGroup
                         type="checkbox"
                         onChange={(val) =>

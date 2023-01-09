@@ -26,7 +26,7 @@ class StudiengaengezeitSpider(Spider):
         results = data['results']
         next_page = data['nextPage']
 
-        for result in results[0:1]: 
+        for result in results: 
             periods = {}
             for key in result['college']['periods'].keys():
                 text = result['college']['periods'][key]['vorlesungszeit_str']
@@ -59,12 +59,11 @@ class StudiengaengezeitSpider(Spider):
             loader.default_input_processor = TakeFirst()
             loader.default_output_processor = TakeFirst()
             loader.add_value('name', result['name'])
-            loader.add_value('logo', result['college']['premium']['logo'])
+            loader.add_value('logo', result['college']['premium']['logo'] if 'premium' in result['college'].keys() and result['college']['premium'] else None)
             loader.add_value('link', course_link)
             loader.add_value('information', information)
             yield loader.load_item()
             
-        #if next_page:
-        if next_page != '2':
+        if next_page:
             params = {**getattr(self, 'params'), 'page': next_page}
             yield Request(getattr(self, 'url') + urllib.parse.urlencode(params, True), callback=self.parse)

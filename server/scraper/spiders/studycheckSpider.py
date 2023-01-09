@@ -38,7 +38,7 @@ class StudycheckSpider(Spider):
     image = ''
     
     def parse(self, response):
-        for course in response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex')[0:1]:
+        for course in response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex'):
             url = course.css('a::attr(href)').extract_first()
             image = course.xpath('substring-before(substring-after(//div[contains(@class, "rfv1-media-layout__logo")]/@style, "background: url("), ")")').extract_first()
             setattr(self, 'image', image)
@@ -48,8 +48,6 @@ class StudycheckSpider(Spider):
             page = next_page.xpath('@href').extract_first().split('&')[-1]
             
             next_page_url = getattr(self, 'start_urls')[0] + '&' + page
-            if '2' in page:
-                return
             if next_page_url:
                 yield Request(next_page_url, callback = self.parse)
 
