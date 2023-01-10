@@ -16,7 +16,8 @@ import { searchCourses } from "../services/courses";
 import Banner from "../components/Banner";
 import { BsStar } from "react-icons/bs";
 import CoursCard from "../components/CoursCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthProvider } from "../context/authProvider";
 
 export default function Results() {
   const [courses, setCourses] = useState({ results: [] });
@@ -28,7 +29,7 @@ export default function Results() {
   const languages = searchParams.get("languages");
   const cities = searchParams.get("cities");
   const portals = searchParams.get("portals");
-
+  const { data, refetch } = useAuthProvider();
   const {
     isLoading,
     isFetching: isFetchingNextPage,
@@ -59,7 +60,11 @@ export default function Results() {
       },
     }
   );
-
+    useEffect(() => {
+      if (data) {
+        refetch()
+      }
+    }, [])
   if (isLoading) {
     return (
       <ResultsLayout>
@@ -83,7 +88,7 @@ export default function Results() {
       <Container maxW="8xl" mb="8">
         <Text>{courses.count} Ergebnisse für</Text>
         <Heading as="h1" color="secondary" fontWeight="normal" mb="8">
-          {search ?? ""}
+          {search ?? "Ihre Suche"}
         </Heading>
         <Stack spacing={6}>
           {courses.results.map((cours) => (
@@ -109,7 +114,7 @@ export default function Results() {
   );
 }
 
-export const RateTag = ({ rate = 4.8 }) => (
+export const RateTag = ({ rating = 4.8 }) => (
   <Tag
     bg="primary"
     color="black"
@@ -119,7 +124,7 @@ export const RateTag = ({ rate = 4.8 }) => (
     display="flex"
   >
     <Text as="span" lineHeight="normal">
-      {rate}
+      {rating}
     </Text>{" "}
     <BsStar fontSize={"12px"} />
   </Tag>

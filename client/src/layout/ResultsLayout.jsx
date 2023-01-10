@@ -126,7 +126,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       ...newForm
     })
   }, [])
-  console.log('form', form);
+
   const onCheckBoxChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     navigateTo({ ...form, [e.target.name]: e.target.value })

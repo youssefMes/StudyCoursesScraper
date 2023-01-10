@@ -19,7 +19,7 @@ import { bookmarkCours } from "../../services/bookmarks";
 export default function CoursCard({ cours }) {
   const { mutateAsync, isLoading, isSuccess } = useMutation(bookmarkCours);
   const { data } = useAuthProvider();
-  const { bookmarked_courses } = data
+  const { bookmarked_courses } = data || {}
   const bookmark = () => {
     if (!bookmarked_courses.includes(cours.id)) {
       mutateAsync({
@@ -29,7 +29,7 @@ export default function CoursCard({ cours }) {
       bookmarked_courses.push(cours.id)
     }
   };
-
+  const rating = cours.stars.find((item) => item.name === 'Gesamtbewertung')?.value || ''
   return (
     <Grid
       gridTemplateColumns={{
@@ -58,7 +58,7 @@ export default function CoursCard({ cours }) {
               <Text color="muted" fontWeight={400}>
                 {cours.information.university}
               </Text>
-              <IconButton
+              {data && (<IconButton
                 variant="primary"
                 icon={isSuccess || bookmarked_courses.includes(cours.id) ? <BsBookmarkFill /> : <BsBookmark />}
                 aria-label="bookmark cours"
@@ -66,7 +66,7 @@ export default function CoursCard({ cours }) {
                 display={data ? "flex" : "none"}
                 onClick={bookmark}
                 isLoading={isLoading}
-              />
+              />)}
             </HStack>
             <Link to={`/courses/${cours.id}`}>
               <Heading
@@ -84,7 +84,7 @@ export default function CoursCard({ cours }) {
             <Text color="muted" fontWeight={600} opacity={0.7}>
               {cours.information.degree}
             </Text>
-            <RateTag />
+            {rating && <RateTag rating={rating}/>}
           </Stack>
         </Stack>
       </GridItem>
