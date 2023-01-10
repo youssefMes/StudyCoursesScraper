@@ -63,7 +63,6 @@ class CourseView(viewsets.ModelViewSet):
         course = self.queryset.filter(id=kwargs['pk']).first()
         course.is_valid = False
         course.invalidated_by = request.user
-        course.validated_by = None
         course.save()
         return Response(CourseSerializer(course, many=False).data)
     
