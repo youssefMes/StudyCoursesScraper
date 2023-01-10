@@ -7,7 +7,7 @@ const auth = createContext({});
 export const useAuthProvider = () => useContext(auth);
 
 const AuthProvider = ({ children }) => {
-  const { isLoading, data, remove } = useQuery(["user"], loadUser, {
+  const { isLoading, data, remove, refetch } = useQuery(["user"], loadUser, {
     refetchOnWindowFocus: false,
     enabled: Boolean(localStorage.getItem("token")),
     // retry: false,
@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
     return <h1>...loading</h1>;
   }
 
-  return <auth.Provider value={{ data, remove }}>{children}</auth.Provider>;
+  return <auth.Provider value={{ data, remove, refetch }}>{children}</auth.Provider>;
 };
 
 export default AuthProvider;
