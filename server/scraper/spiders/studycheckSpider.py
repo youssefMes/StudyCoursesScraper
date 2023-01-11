@@ -8,12 +8,6 @@ from scraper.items import CourseItem
 from pprint import pprint
 from inline_requests import inline_requests
 from re import sub, findall
-import requests
-from django.core import files
-from io import BytesIO
-
-from scraperApp.models import Logo
-
 
 class StudycheckSpider(Spider):
     name = 'studycheckSpider'
@@ -36,7 +30,6 @@ class StudycheckSpider(Spider):
     
     def parse(self, response):
         courses = response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex')
-        print('courses', len(courses))
         for course in courses:
             url = course.css('a::attr(href)').extract_first()
             image = course.xpath('substring-before(substring-after(a/div/div[contains(@class, "rfv1-media-layout__logo")]/@style, "background: url("), ")")').extract_first()
