@@ -10,7 +10,7 @@ services:
         ports:
             - 80:80
         volumes:
-            - static_volume:/srv/app/django_static
+            - ./server/static:/srv/app/static
         depends_on: 
             - server
     server:
@@ -20,10 +20,10 @@ services:
             context: ./server
             dockerfile: Dockerfile.prod
         volumes:
-            - static_volume:/srv/app/django_static   
+            - ./server/static:/srv/app/static   
         entrypoint: /srv/app/wsgi-entrypoint.sh
         ports:
-            - 8000:8000        
+            - 8000:8000
         depends_on:
             postgres:
                 condition: service_healthy
@@ -43,5 +43,3 @@ services:
             interval: 5s
             timeout: 5s
             retries: 5
-volumes:
-    static_volume: {}

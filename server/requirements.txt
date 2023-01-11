@@ -10,3 +10,5 @@ scrapy_djangoitem
 scrapy-inline-requests
 djangorestframework-simplejwt
 Pillow
+django-environ
+sendgrid-django

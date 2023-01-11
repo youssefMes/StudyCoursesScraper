@@ -28,8 +28,8 @@ class ScraperPipeline(object):
             if 'comments' in item.keys():
                 entries = []
                 for comment in item['comments']:
-                    comment = Comment.objects.filter(title=comment['title'], course=course)
-                    if not comment.exists():
+                    comment_record = Comment.objects.filter(title=comment['title'], course=course, course__information__university=course.information.university)
+                    if not comment_record.exists():
                         comment['course'] = course
                         comment['date'] = datetime.datetime.strptime(comment['date'], "%d.%m.%Y").strftime("%Y-%m-%d")
                         entries.append(Comment(**comment))
@@ -102,6 +102,7 @@ class ScraperPipeline(object):
         fp = BytesIO()
         fp.write(response.content)
         file_name = logo_url.split('/')[-1]
+        file_name = file_name.split('?')[0]
         found = Logo.objects.filter(path=file_name).exists()
         if found:
             return Logo.objects.get(path=file_name)

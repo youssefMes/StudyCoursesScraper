@@ -20,9 +20,6 @@ class StudycheckSpider(Spider):
     allowed_domains = ['www.studycheck.de']
     start_urls = ['https://www.studycheck.de/suche?rt=2&q=&c=1&modal=1']
     portal_name = 'studyCheck'
-    custom_settings = {
-     'CONCURRENT_REQUESTS': 1
-    }       
     mapping = {
         'Regelstudienzeit': 'study_periode',
         'Studienbeginn': 'study_start',
@@ -38,15 +35,15 @@ class StudycheckSpider(Spider):
     image = ''
     
     def parse(self, response):
-        for course in response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex'):
+        courses = response.css('div.rfv1-media-layout__row.rfv1-media-layout__row--relative.rfv1-display--flex')
+        print('courses', len(courses))
+        for course in courses:
             url = course.css('a::attr(href)').extract_first()
-            image = course.xpath('substring-before(substring-after(//div[contains(@class, "rfv1-media-layout__logo")]/@style, "background: url("), ")")').extract_first()
-            setattr(self, 'image', image)
-            yield Request(url, callback = self.parse_item_informations)
+            image = course.xpath('substring-before(substring-after(a/div/div[contains(@class, "rfv1-media-layout__logo")]/@style, "background: url("), ")")').extract_first()
+            yield Request(url, callback = self.parse_item_informations, cb_kwargs=dict(image=image))
         next_page = response.xpath('//nav[contains(@class, "rfv1-pagination")]/*[last()]')[0]
         if ('a' == next_page.root.tag):
             page = next_page.xpath('@href').extract_first().split('&')[-1]
-            
             next_page_url = getattr(self, 'start_urls')[0] + '&' + page
             if next_page_url:
                 yield Request(next_page_url, callback = self.parse)
@@ -54,7 +51,7 @@ class StudycheckSpider(Spider):
 
 
     @inline_requests
-    def parse_item_informations(self, response):
+    def parse_item_informations(self, response, image):
         cards = response.xpath(
             "//div[contains(concat(' ', normalize-space(@class), ' '), ' courses-details ')]/div[contains(@class, 'card')]"
         )
@@ -68,7 +65,7 @@ class StudycheckSpider(Spider):
         loader.default_input_processor = TakeFirst()
         loader.default_output_processor = TakeFirst()
         loader.add_xpath('name', 'normalize-space(//h1[@class="course-title"]/text())')
-        loader.add_xpath('logo', getattr(self, 'image'))
+        loader.add_xpath('logo', image)
         loader.add_value('link', response._url)
         loader.add_value('information', informations)
         
@@ -80,6 +77,9 @@ class StudycheckSpider(Spider):
         if evaluation_count and int(evaluation_count) > 0:
             star_reports = self.parse_item_reports(response=resp)
             reports_stats = self.parse_item_statistics(response=resp)
+            """ 
+            Uncomment this block to scrape all comments
+            
             comments += self.parse_item_evaluations(response=resp)
             next_page = resp.xpath('//ul[@class="pagination"]/li[last()]/a/@href').extract_first()                 
             if isinstance(next_page, str):
@@ -96,9 +96,10 @@ class StudycheckSpider(Spider):
                 resp = yield Request(next_page_url)
                 comments += self.parse_item_evaluations(response=resp)
                 next_page = resp.xpath('//ul[@class="pagination"]/li[last()]/a/@href').extract_first()
-                next_page = next_page.split('/')[-1] if next_page else None
-
-            loader.add_value('comments', comments)
+                next_page = next_page.split('/')[-1] if next_page else None 
+                
+            loader.add_value('comments', comments) 
+            """
             loader.add_value('star_reports', star_reports)
             loader.add_value('reports_stats', reports_stats)
             loader.add_value('evaluation_count', evaluation_count)

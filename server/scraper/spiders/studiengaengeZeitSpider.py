@@ -5,8 +5,6 @@ from itemloaders.processors import TakeFirst
 from scrapy.loader import ItemLoader
 from scraper.items import CourseItem
 import logging
-#logging.getLogger('scrapy').setLevel(logging.ERROR)
-logging.getLogger('scrapy').propagate = False
 
 class StudiengaengezeitSpider(Spider):
     name = 'studiengaengeZeit'

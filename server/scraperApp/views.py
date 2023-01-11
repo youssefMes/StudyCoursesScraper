@@ -114,7 +114,7 @@ def filtersView(request):
     for item in queryset:
         if item['portal__name'] not in portals:
             portals.append(item['portal__name'])
-        if not any(deg in item['information__degree'] for deg in degrees):
+        if item['information__degree'] and not any(deg in item['information__degree'] for deg in degrees):
             degrees.append(item['information__degree'])
         if item['information__languages']:
             for l in item['information__languages'].split(','):

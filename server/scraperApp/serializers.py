@@ -3,6 +3,7 @@ from .models import Bookmark, Information, Percentage, Portal, Star, User, Cours
 from djoser.serializers import UserSerializer, UserCreateSerializer as BaseUserCreateSerializer
 
 class LogoSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(max_length=None, allow_empty_file=False, use_url=False)
     class Meta:
         model = Logo
         fields = ['image']
