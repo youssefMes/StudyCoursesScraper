@@ -13,9 +13,6 @@ class MedienstudierenSpider(Spider):
     allowed_domains = ['www.medien-studieren.net']
     start_urls = ['https://www.medien-studieren.net/hochschulen-finden/?tx_drshochschulen_hochschulen[land]=Deutschland&tx_drshochschulen_hochschulen[action]=search&tx_drshochschulen_hochschulen[controller]=Hochschule']
     portal_name = 'medien-studieren'
-    custom_settings = {
-     'CONCURRENT_REQUESTS': 1
-    }
 
     mapping = {
         'Dauer': 'study_periode',

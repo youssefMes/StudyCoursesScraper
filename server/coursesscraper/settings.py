@@ -9,12 +9,16 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os, sys
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 from pathlib import Path
 import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -25,7 +29,16 @@ SECRET_KEY = 'django-insecure-#o&ez_x_3=%r4de!ifzndz%m&!w^%nn6%@c%c68)vk8pk1sjao
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+import logging
+if not DEBUG:
+    logging.getLogger('scrapy').propagate = False
+    logging.getLogger('urllib3').propagate = False
+
+
+
+#ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+ALLOWED_HOSTS = ['cs-study-courses.online', 'localhost']
+
 
 
 # Application definition
@@ -130,11 +143,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-#STATIC_ROOT = BASE_DIR / 'static/'
+STATIC_ROOT = BASE_DIR / 'static/'
 
-STATICFILES_DIRS = [
+""" STATICFILES_DIRS = [
     BASE_DIR / 'static',
-]
+] """
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -187,3 +200,12 @@ EMAIL_PORT = "1025"
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 EMAIL_USE_TLS = False
+
+""" EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = 'xntONBSnQjOwnQhzWWvFfQ'
+EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
+DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
+LOGIN_REDIRECT_URL = '/' """

@@ -15,9 +15,6 @@ class StudiengaengezeitSpider(Spider):
     start_urls = [url + urllib.parse.urlencode(params, True)]
     portal_link = 'https://studiengaenge.zeit.de'
     portal_name = 'studiengaenge.zeit'
-    custom_settings = {
-     'CONCURRENT_REQUESTS': 1
-    }
 
     def parse(self, response):
         data = json.loads(response.text)
