@@ -1,4 +1,6 @@
-FROM python:3
+FROM python:3.11.1-buster
+RUN apt update
+RUN apt-get install cron -y
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 WORKDIR /srv/app

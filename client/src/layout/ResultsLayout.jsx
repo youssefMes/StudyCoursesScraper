@@ -9,9 +9,6 @@ import {
   DrawerContent,
   useDisclosure,
   Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
   Stack,
   StackDivider,
   InputGroup,
@@ -25,18 +22,18 @@ import {
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
-  Heading
+  Heading,
 } from "@chakra-ui/react";
-import { FaChevronDown } from "react-icons/fa";
 import { IoChevronDownOutline } from "react-icons/io5";
-import { BiFilterAlt, BiMinus, BiPlus } from "react-icons/bi";
+import { BiFilterAlt } from "react-icons/bi";
 import { FiSearch } from "react-icons/fi";
-import { checkboxGroupItems } from "../utils/fakeData";
 import CheckboxGroup from "../components/CheckboxGroup";
 import { useSearchParams } from "react-router-dom";
 import { fetchFilters } from "../services/filters";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import MultiSelect from "../components/MultiSelect";
 
 export default function ResultsLayout({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,19 +74,14 @@ const SidebarContent = ({ onClose, ...rest }) => {
     languages: [],
     degrees: [],
   });
-  const [searchParams, setSearchParams] = useSearchParams({});
+  const [searchParams] = useSearchParams({});
   const search = searchParams.get("search");
-  const study_forms = searchParams.get("study_forms");
-  const degrees = searchParams.get("degrees");
-  const languages = searchParams.get("languages");
-  const cities = searchParams.get("cities");
-  const portals = searchParams.get("portals");
   const [filters, setFilters] = useState({
     checkboxes: [],
     dropdowns: [],
   });
   const navigate = useNavigate();
-  const { isLoading: loadingFilters } = useQuery(["filters"], fetchFilters, {
+  useQuery(["filters"], fetchFilters, {
     onSuccess: (res) => {
       const keys = Object.keys(res);
       for (const key of keys) {
@@ -109,29 +101,28 @@ const SidebarContent = ({ onClose, ...rest }) => {
     },
   });
   useEffect(() => {
-    const entries = Array.from(searchParams.entries())
-    let value = ''
-    let newForm = {}
+    const entries = Array.from(searchParams.entries());
+    let value = "";
+    let newForm = {};
     for (const [key, val] of entries) {
-      value = val
-      if (key !== 'search') {
-        value = searchParams.get(key).split(',').filter(Boolean)
+      value = val;
+      if (key !== "search") {
+        value = searchParams.get(key).split(",").filter(Boolean);
       }
       if (value) {
-        newForm = {...newForm, [key]: value}
+        newForm = { ...newForm, [key]: value };
       }
     }
     setForm({
       ...form,
-      ...newForm
-    })
-  }, [])
+      ...newForm,
+    });
+  }, []);
 
   const onCheckBoxChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    navigateTo({ ...form, [e.target.name]: e.target.value })
-
-  }
+    navigateTo({ ...form, [e.target.name]: e.target.value });
+  };
   const navigateTo = (form) => {
     const { search, study_forms, cities, portals, languages, degrees } = form;
 
@@ -139,7 +130,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       pathname: "/search",
       search: `?search=${search}&study_forms=${study_forms}&cities=${cities}&portals=${portals}&degrees=${degrees}&languages=${languages}`,
     });
-   }
+  };
   return (
     <Box
       bg={"light"}
@@ -171,66 +162,41 @@ const SidebarContent = ({ onClose, ...rest }) => {
               }}
             />
           </InputGroup>
-          <Button variant={"primary"} onClick={() => navigateTo(form)}>Suchen</Button>
+          <Button variant={"primary"} onClick={() => navigateTo(form)}>
+            Suchen
+          </Button>
         </HStack>
         <Accordion defaultIndex={[0, 1, 2]} allowMultiple>
           <Stack divider={<StackDivider borderColor={"blackAlpha.300"} />}>
-          {filters.checkboxes.map((group) => (
-                <GridItem key={group.name}>
-                  <CheckboxGroup
-                    groupTitle={group.name}
-                    options={group.items}
-                    onChange={onCheckBoxChange}
-                    name={group.key}
-                    defaultValue={form[group.key]}
-                  />
-                </GridItem>
-              ))}
-              {filters.dropdowns.map((group) => (
-                <GridItem key={group.name}>
-                  <Menu closeOnSelect={false}>
-                    <Heading as="h3" fontSize="lg">
-                      {group.name}
-                    </Heading>
-                    <MenuButton
-                      mt="2"
-                      noOfLines={1}
-                      maxW="250px"
-                      bg="white"
-                      w="full"
-                      as={Button}
-                      border="1px solid black"
-                      rounded="md"
-                      display="flex"
-                      textAlign={"left"}
-                      alignItems={"flex-start"}
-                      fontWeight={"normal"}
-                      rightIcon={
-                        <IoChevronDownOutline style={{ float: "right" }} />
-                      }
-                    > 
-                      {form?.[group.key]?.length > 0
-                        ? form?.[group.key]?.join(", ")
-                        : `${group.name} Auswählen`}
-                    </MenuButton>
-                    <MenuList minWidth="240px" h="200px" overflowY={'scroll'}>
-                      <MenuOptionGroup
-                        type="checkbox"
-                        onChange={(val) => {
-                          setForm({ ...form, [group.key]: val })
-                          navigateTo({ ...form, [group.key]: val })
-                        }}
-                      >
-                        {group.items.map((item) => (
-                          <MenuItemOption value={item} key={item}>
-                            {item}
-                          </MenuItemOption>
-                        ))}
-                      </MenuOptionGroup>
-                    </MenuList>
-                  </Menu>
-                </GridItem>
-              ))}
+            {filters.checkboxes.map((group) => (
+              <GridItem key={group.name}>
+                <CheckboxGroup
+                  groupTitle={group.name}
+                  options={group.items}
+                  onChange={onCheckBoxChange}
+                  name={group.key}
+                  defaultValue={form[group.key]}
+                />
+              </GridItem>
+            ))}
+            {filters.dropdowns.map((group) => (
+              <GridItem key={group.name}>
+                <Heading as="h3" fontSize="lg" mb="3">
+                  {group.name}
+                </Heading>
+                <MultiSelect
+                  options={group.items.map((el) => ({
+                    value: el,
+                    label: el,
+                  }))}
+                  field={group.key}
+                  onChange={(val) => {
+                    setForm({ ...form, ...val });
+                    navigateTo({ ...form, [group.key]: val[group.key] });
+                  }}
+                />
+              </GridItem>
+            ))}
           </Stack>
         </Accordion>
       </Stack>

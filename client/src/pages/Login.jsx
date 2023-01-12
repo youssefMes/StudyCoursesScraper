@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Stack, Button, useToast } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import Field from "../components/Field";
 import SplitScreen from "../layout/SplittedScreen";
-import { loadUser, login } from "../services/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { login } from "../services/auth";
+import { useAuthProvider } from "../context/authProvider";
 
 const registerFields = [
   {
@@ -27,6 +28,7 @@ const registerFields = [
 ];
 
 export default function Login() {
+  const { refetch } = useAuthProvider();
   const toast = useToast();
   const navigate = useNavigate();
   const methods = useForm({
@@ -35,7 +37,6 @@ export default function Login() {
       password: "",
     },
   });
-  const { mutateAsync: loadLoggedInUser } = useMutation(loadUser);
 
   const { mutateAsync, isLoading } = useMutation(login, {
     onError: (err) =>
@@ -48,7 +49,7 @@ export default function Login() {
       }),
     onSuccess: (res) => {
       localStorage.setItem("token", res.access);
-      loadLoggedInUser();
+      refetch();
       navigate("/");
     },
   });

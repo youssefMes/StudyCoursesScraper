@@ -18,18 +18,20 @@ import { bookmarkCours } from "../../services/bookmarks";
 
 export default function CoursCard({ cours }) {
   const { mutateAsync, isLoading, isSuccess } = useMutation(bookmarkCours);
-  const { data } = useAuthProvider();
-  const { bookmarked_courses } = data || {}
+  const { data, addNewBookmark, bookmarks } = useAuthProvider();
+
   const bookmark = () => {
-    if (!bookmarked_courses.includes(cours.id)) {
+    if (!bookmarks.includes(cours.id)) {
       mutateAsync({
         userId: data.id,
         id: cours.id,
       });
-      bookmarked_courses.push(cours.id)
+      addNewBookmark(cours.id);
     }
   };
-  const rating = cours.stars.find((item) => item.name === 'Gesamtbewertung')?.value || ''
+  const rating =
+    cours.stars.find((item) => item.name === "Gesamtbewertung")?.value || "";
+
   return (
     <Grid
       gridTemplateColumns={{
@@ -58,15 +60,23 @@ export default function CoursCard({ cours }) {
               <Text color="muted" fontWeight={400}>
                 {cours.information.university}
               </Text>
-              {data && (<IconButton
-                variant="primary"
-                icon={isSuccess || bookmarked_courses.includes(cours.id) ? <BsBookmarkFill /> : <BsBookmark />}
-                aria-label="bookmark cours"
-                size="sm"
-                display={data ? "flex" : "none"}
-                onClick={bookmark}
-                isLoading={isLoading}
-              />)}
+              {data && (
+                <IconButton
+                  variant="primary"
+                  icon={
+                    isSuccess || bookmarks.includes(cours.id) ? (
+                      <BsBookmarkFill />
+                    ) : (
+                      <BsBookmark />
+                    )
+                  }
+                  aria-label="bookmark cours"
+                  size="sm"
+                  display={data ? "flex" : "none"}
+                  onClick={bookmark}
+                  isLoading={isLoading}
+                />
+              )}
             </HStack>
             <Link to={`/courses/${cours.id}`}>
               <Heading
@@ -84,7 +94,7 @@ export default function CoursCard({ cours }) {
             <Text color="muted" fontWeight={600} opacity={0.7}>
               {cours.information.degree}
             </Text>
-            {rating && <RateTag rating={rating}/>}
+            {rating && <RateTag rating={rating} />}
           </Stack>
         </Stack>
       </GridItem>

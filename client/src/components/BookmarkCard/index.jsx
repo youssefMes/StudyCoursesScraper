@@ -10,34 +10,37 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { MdDelete } from "react-icons/md";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { useAuthProvider } from "../../context/authProvider";
-import { RateTag } from "../../pages/Results";
 import { deleteBookmarkCours } from "../../services/bookmarks";
 
-export default function BookmarkCard({ bookmark, refetch }) {
-  const { mutateAsync, isLoading } = useMutation(deleteBookmarkCours);
+export default function BookmarkCard({ bookmark }) {
+  const queryClient = useQueryClient();
+  const { data, deleteNewBookmark } = useAuthProvider();
 
-  const { data } = useAuthProvider();
+  const { mutateAsync, isLoading } = useMutation(deleteBookmarkCours, {
+    onSuccess: () => queryClient.invalidateQueries(`bookmarks`),
+  });
 
   const deleteBookmark = async () => {
     await mutateAsync({
       id: bookmark.id,
     });
-    refetch();
+    deleteNewBookmark(bookmark.course);
   };
 
   return (
     <Grid
       gridTemplateColumns={{
         base: "1fr",
-        md: "minmax(200px, 0.25fr) 1fr",
+        md: "minmax(100px, 0.05fr) 1fr",
       }}
       bg="light"
       rounded={"xl"}
       p="4"
-      gap="8"
+      gap="4"
+      minHeight={"130px"}
       key={Math.random()}
     >
       <GridItem>
@@ -45,22 +48,26 @@ export default function BookmarkCard({ bookmark, refetch }) {
           src={bookmark.logo || "/Rectangle 14.png"}
           alt={bookmark.course_name}
           width="100%"
-          maxHeight="250px"
-          objectFit="contain"
+          maxHeight={{ base: "200px", md: "100px" }}
+          objectFit={"contain"}
+          objectPosition={{ base: "center", md: "left" }}
+          rounded="lg"
         />
       </GridItem>
       <GridItem>
         <Stack spacing={8}>
-          <Stack>
+          <Stack spacing={0}>
             <HStack justifyContent={"space-between"}>
               <Text color="muted" fontWeight={400}>
                 {bookmark?.university}
               </Text>
               <IconButton
-                bgColor={"red"}
+                bgColor={"red.500"}
+                _hover={{ bg: "red.600" }}
                 color={"white"}
                 variant="primary"
                 icon={<MdDelete />}
+                fontSize="xl"
                 aria-label="bookmark cours"
                 size="sm"
                 display={data ? "flex" : "none"}

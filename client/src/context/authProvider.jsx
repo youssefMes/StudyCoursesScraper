@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { loadUser } from "../services/auth";
 
@@ -7,17 +7,46 @@ const auth = createContext({});
 export const useAuthProvider = () => useContext(auth);
 
 const AuthProvider = ({ children }) => {
-  const { isLoading, data, remove, refetch } = useQuery(["user"], loadUser, {
+  const [bookmarks, setBookmarks] = useState([]);
+  const [user, setUser] = useState(null);
+  const { data, remove, refetch } = useQuery(["user"], loadUser, {
     refetchOnWindowFocus: false,
     enabled: Boolean(localStorage.getItem("token")),
-    // retry: false,
-
+    onSuccess: (res) => {
+      setBookmarks(res.bookmarked_courses);
+      setUser(res);
+    },
   });
-  if (isLoading) {
-    return <h1>...loading</h1>;
-  }
 
-  return <auth.Provider value={{ data, remove, refetch }}>{children}</auth.Provider>;
+  const addNewBookmark = (courseId) => {
+    setBookmarks([...bookmarks, courseId]);
+  };
+  const deleteNewBookmark = (courseId) => {
+    setBookmarks(bookmarks.filter((course) => course !== courseId));
+  };
+
+  const logout = () => {
+    remove();
+    setUser(null);
+    localStorage.removeItem("token");
+  };
+
+  return (
+    <auth.Provider
+      value={{
+        data,
+        user,
+        remove,
+        refetch,
+        bookmarks,
+        addNewBookmark,
+        deleteNewBookmark,
+        logout,
+      }}
+    >
+      {children}
+    </auth.Provider>
+  );
 };
 
 export default AuthProvider;

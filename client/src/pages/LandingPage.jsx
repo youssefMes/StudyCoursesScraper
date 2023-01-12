@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -9,28 +10,20 @@ import {
   IconButton,
   Image,
   Input,
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  Select,
   Stack,
   Text,
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { FaChevronDown } from "react-icons/fa";
-import { IoChevronDownOutline } from "react-icons/io5";
-import CheckboxGroup from "../components/CheckboxGroup";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
 import HomeLayout from "../layout/HomeLayout";
-import { useNavigate } from "react-router-dom";
+import CheckboxGroup from "../components/CheckboxGroup";
+import { fetchFilters } from "../services/filters";
+import { FaChevronDown } from "react-icons/fa";
 import { ReactComponent as BubbleMsg } from "../assets/bubble.svg";
 import desk from "../assets/desk.png";
-import { checkboxGroupItems } from "../utils/fakeData";
-import { useQuery } from "react-query";
-import { fetchFilters } from "../services/filters";
+import MultiSelect from "../components/MultiSelect";
 
 export default function LandingPage() {
   const [filters, setFilters] = useState({
@@ -75,22 +68,34 @@ export default function LandingPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { search, study_forms, cities, portals, languages, degrees } = form;
-    console.log('form', form);
     navigate({
       pathname: "/search",
       search: `?search=${search}&study_forms=${study_forms}&cities=${cities}&portals=${portals}&degrees=${degrees}&languages=${languages}`,
     });
   };
 
+  const styles = {
+    menuList: (base) => ({
+      ...base,
+      "::-webkit-scrollbar": {
+        width: "10px",
+        height: "0px",
+      },
+      "::-webkit-scrollbar-track": {
+        background: "#f1f1f1",
+      },
+      "::-webkit-scrollbar-thumb": {
+        background: "#888",
+      },
+      "::-webkit-scrollbar-thumb:hover": {
+        background: "#555",
+      },
+    }),
+  };
+
   return (
     <HomeLayout>
-      <Stack
-        width={"full"}
-        spacing={0}
-        flex={1}
-        justify="center"
-        minH={"calc(100vh - 104px)"}
-      >
+      <Stack width={"full"} spacing={0} flex={1} mt="172px" mb="20">
         <Stack
           bg="light"
           width="full"
@@ -153,47 +158,18 @@ export default function LandingPage() {
                 </GridItem>
               ))}
               {filters.dropdowns.map((group) => (
-                <GridItem key={group.name}>
-                  <Menu closeOnSelect={false}>
-                    <Heading as="h3" fontSize="lg">
-                      {group.name}
-                    </Heading>
-                    <MenuButton
-                      mt="2"
-                      noOfLines={1}
-                      maxW="250px"
-                      bg="white"
-                      w="full"
-                      as={Button}
-                      border="1px solid black"
-                      rounded="md"
-                      display="flex"
-                      textAlign={"left"}
-                      alignItems={"flex-start"}
-                      fontWeight={"normal"}
-                      rightIcon={
-                        <IoChevronDownOutline style={{ float: "right" }} />
-                      }
-                    >
-                      {form?.[group.key]?.length > 0
-                        ? form?.[group.key]?.join(", ")
-                        : `${group.name} Auswhälen`}
-                    </MenuButton>
-                    <MenuList minWidth="240px" h={40} sx={{overflow:"scroll"}}>
-                      <MenuOptionGroup
-                        type="checkbox"
-                        onChange={(val) =>
-                          setForm({ ...form, [group.key]: val })
-                        }
-                      >
-                        {group.items.map((item) => (
-                          <MenuItemOption value={item} key={item}>
-                            {item}
-                          </MenuItemOption>
-                        ))}
-                      </MenuOptionGroup>
-                    </MenuList>
-                  </Menu>
+                <GridItem key={group.name} maxW="300px">
+                  <Heading as="h3" fontSize="lg" mb="3">
+                    {group.name}
+                  </Heading>
+                  <MultiSelect
+                    options={group.items.map((el) => ({
+                      value: el,
+                      label: el,
+                    }))}
+                    field={group.key}
+                    onChange={(val) => setForm({ ...form, ...val })}
+                  />
                 </GridItem>
               ))}
             </Grid>
@@ -219,9 +195,11 @@ export default function LandingPage() {
                 courses and 54 million students. Learn programming, marketing,
                 data science and more.
               </Text>
-              <Button variant={"primary"} alignSelf="flex-start">
-                Join us for free
-              </Button>
+              <Link to="/register">
+                <Button variant={"primary"} alignSelf="flex-start">
+                  Join us for free
+                </Button>
+              </Link>
             </Stack>
           </GridItem>
         </Grid>

@@ -4,11 +4,7 @@ import BookmarkCard from "../components/BookmarkCard";
 import { fetchBookmarks } from "../services/bookmarks";
 
 export default function BookMarks() {
-  const {
-    data: bookmarks,
-    isLoading,
-    refetch,
-  } = useQuery("bookmarks", fetchBookmarks);
+  const { data: bookmarks, isLoading } = useQuery("bookmarks", fetchBookmarks);
 
   if (isLoading) {
     return (
@@ -22,16 +18,18 @@ export default function BookMarks() {
     <Box minH="100vh" bg={"white"} paddingTop={"72px"}>
       <Box p="4" pt="8">
         <Container maxW="8xl" mb="8">
-          <Heading as="h1" color="primary" fontWeight="normal" mb="8">
-            Bookmarks
+          <Heading
+            as="h1"
+            color="secondary"
+            fontWeight="bold"
+            mb="8"
+            textAlign="center"
+          >
+            Merkliste
           </Heading>
           <Stack spacing={6}>
             {bookmarks.results.map((bookmark) => (
-              <BookmarkCard
-                bookmark={bookmark}
-                key={bookmark.id}
-                refetch={refetch}
-              />
+              <BookmarkCard bookmark={bookmark} key={bookmark.id} />
             ))}
           </Stack>
         </Container>
