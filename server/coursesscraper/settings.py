@@ -141,13 +141,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static/'
+#STATIC_ROOT = BASE_DIR / 'static/'
 
-""" STATICFILES_DIRS = [
+STATICFILES_DIRS = [
     BASE_DIR / 'static',
-] """
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -194,18 +193,17 @@ DJOSER = {
     },
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+""" EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "mailhog"
 EMAIL_PORT = "1025"
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
-EMAIL_USE_TLS = False
+EMAIL_USE_TLS = False """
 
-""" EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.sendinblue.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = False
-EMAIL_HOST_USER = 'xntONBSnQjOwnQhzWWvFfQ'
-EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mestiri60@googlemail.com'
+EMAIL_HOST_PASSWORD = env('SENDINBLUE_PASSWORD')
 DEFAULT_FROM_EMAIL = env('FROM_EMAIL')
-LOGIN_REDIRECT_URL = '/' """
