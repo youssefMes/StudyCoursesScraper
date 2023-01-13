@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from .models import Bookmark, Information, Percentage, Portal, Star, User, Course, Comment, Logo
 from djoser.serializers import UserSerializer, UserCreateSerializer as BaseUserCreateSerializer
-
+from django.conf import settings
 class LogoSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(max_length=None, allow_empty_file=False, use_url=True)
+    image = serializers.ImageField(max_length=None, allow_empty_file=False, use_url=settings.DEBUG)
     class Meta:
         model = Logo
         fields = ['image']
@@ -36,7 +36,7 @@ class InformationSerializer(serializers.ModelSerializer):
 class BookmarkSerializer(serializers.ModelSerializer):
     course_name = serializers.ReadOnlyField(source='course.name')
     university = serializers.ReadOnlyField(source='course.information.university')
-    logo = serializers.ImageField(source='course.logo.image', use_url=True, required=False)
+    logo = serializers.ImageField(source='course.logo.image', use_url=settings.DEBUG, required=False)
     class Meta:
         model = Bookmark
         fields = ('user' ,'course_name','university', 'course', 'id', 'logo')

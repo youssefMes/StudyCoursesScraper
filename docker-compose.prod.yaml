@@ -24,6 +24,8 @@ services:
         entrypoint: /srv/app/wsgi-entrypoint.sh
         ports:
             - 8000:8000
+        environment:
+            - ENV=prod
         depends_on:
             postgres:
                 condition: service_healthy
