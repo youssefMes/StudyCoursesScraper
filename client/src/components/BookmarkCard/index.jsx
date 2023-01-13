@@ -47,6 +47,7 @@ export default function BookmarkCard({ bookmark }) {
         <Image
           src={bookmark.logo || "/Rectangle 14.png"}
           alt={bookmark.course_name}
+          fallback={<Image src="/university_placeholder.png" width="100%" maxHeight={{ base: "200px", md: "100px" }} objectFit="contain" objectPosition={"left"} rounded="lg"/>}
           width="100%"
           maxHeight={{ base: "200px", md: "100px" }}
           objectFit={"contain"}

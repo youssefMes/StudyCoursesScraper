@@ -15,10 +15,9 @@ class Command(BaseCommand):
         crawler_settings.setmodule(my_settings)
         process = CrawlerProcess(settings=crawler_settings)
 
-        #process.crawl(studycheckSpider.StudycheckSpider)
-        #process.crawl(studiengaengeZeitSpider.StudiengaengezeitSpider)        
+        process.crawl(studycheckSpider.StudycheckSpider)
+        process.crawl(studiengaengeZeitSpider.StudiengaengezeitSpider)        
         process.crawl(medienStudierenSpider.MedienstudierenSpider)        
         self.stdout.write(self.style.WARNING('Starting'))
         process.start()
         self.stdout.write(self.style.WARNING('Done'))
-            

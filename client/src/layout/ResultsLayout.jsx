@@ -139,7 +139,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       w={{ base: "full", md: 80 }}
       pos="fixed"
       h="full"
-      p="2"
+      p="4"
       pt="8"
       {...rest}
     >
@@ -183,6 +183,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
               <GridItem key={group.name}>
                 <Heading as="h3" fontSize="lg" mb="3">
                   {group.name}
+                  {console.log('group.items', group.items)}
                 </Heading>
                 <MultiSelect
                   options={group.items.map((el) => ({

@@ -9,7 +9,7 @@ export const useAuthProvider = () => useContext(auth);
 const AuthProvider = ({ children }) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [user, setUser] = useState(null);
-  const { data, remove, refetch } = useQuery(["user"], loadUser, {
+  const { data, remove, refetch, isLoading } = useQuery(["user"], loadUser, {
     refetchOnWindowFocus: false,
     enabled: Boolean(localStorage.getItem("token")),
     onSuccess: (res) => {
@@ -37,6 +37,7 @@ const AuthProvider = ({ children }) => {
         data,
         user,
         remove,
+        isLoading,
         refetch,
         bookmarks,
         addNewBookmark,

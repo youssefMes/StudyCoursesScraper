@@ -8,32 +8,25 @@ export const searchCourses = async ({
   languages,
   portals,
   cities,
-  search
+  search,
 }) => {
-  /*  console.log({
-    study_forms,
-    degrees,
-    languages,
-    portals,
-    cities,
-   }); */
-  const getParam = (key , param) => {
-    let url = ''
+  const getParam = (key, param) => {
+    let url = "";
     for (const item of param) {
-      url += `&${key}=${item}`
+      url += `&${key}=${item}`;
     }
-    return url
-  }
-  
+    return url;
+  };
+
   const response = await axiosInstance({
     url: `/courses/?limit=${limit}${page !== 1 ? `&page=${page}` : ""}
     &search=${search}
-    ${study_forms?.length > 0 ? `${getParam('study_forms', study_forms)}` : ''}
-    ${degrees?.length > 0 ? `${getParam('degrees', degrees)}`  : ''}
-    ${languages?.length > 0 ? `${getParam('languages', languages)}` : ''}
-    ${cities?.length > 0 ? `${getParam('cities', cities)}` : ''}
-    ${portals?.length > 0 ? `${getParam('portals', portals)}` : ''}
-    `, // endpoint must be changed to filter courses
+    ${study_forms?.length > 0 ? `${getParam("study_forms", study_forms)}` : ""}
+    ${degrees?.length > 0 ? `${getParam("degrees", degrees)}` : ""}
+    ${languages?.length > 0 ? `${getParam("languages", languages)}` : ""}
+    ${cities?.length > 0 ? `${getParam("cities", cities)}` : ""}
+    ${portals?.length > 0 ? `${getParam("portals", portals)}` : ""}
+    `,
   });
   return {
     results: response.data.results,
@@ -47,4 +40,26 @@ export const fetchCourse = async (id) => {
     method: "get",
     url: `/courses/${id}`,
   }).then((res) => res.data);
+};
+
+export const validateCourse = async (id) => {
+  const token = localStorage.getItem("token");
+  return await axiosInstance({
+    method: "patch",
+    url: `/courses/${id}/validate/`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const inValidateCourse = async (id) => {
+  const token = localStorage.getItem("token");
+  return await axiosInstance({
+    method: "patch",
+    url: `/courses/${id}/invalidate/`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

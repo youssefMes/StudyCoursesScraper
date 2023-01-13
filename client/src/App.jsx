@@ -39,7 +39,10 @@ const App = () => {
 };
 
 function Protected({ children }) {
-  const { data } = useAuthProvider();
+  const { data, isLoading } = useAuthProvider();
+  if (localStorage.getItem("token") && isLoading) {
+    return <p>Loading...</p>;
+  }
   if (!data) {
     return <Navigate to="/login" replace />;
   }

@@ -12,3 +12,4 @@ djangorestframework-simplejwt
 Pillow
 django-environ
 sendgrid-django
+django-crontab

@@ -1,10 +1,39 @@
-import { Heading, Spinner, Stack, Container, Box } from "@chakra-ui/react";
+import {
+  Heading,
+  Spinner,
+  Stack,
+  Container,
+  Box,
+  Center,
+  Button,
+} from "@chakra-ui/react";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import BookmarkCard from "../components/BookmarkCard";
 import { fetchBookmarks } from "../services/bookmarks";
 
 export default function BookMarks() {
-  const { data: bookmarks, isLoading } = useQuery("bookmarks", fetchBookmarks);
+  const [bookmarks, setBookmarks] = useState({
+    results: [],
+  });
+  const [page, setPage] = useState(1);
+  const { isLoading, isFetching: isFetchingNextPage } = useQuery(
+    ["bookmarks", page],
+    () => fetchBookmarks({ page }),
+    {
+      keepPreviousData: true,
+      onSuccess: (response) => {
+        if (response.nextPage !== bookmarks?.nextPage) {
+          setBookmarks((prevState) => ({
+            ...response,
+            results: [...prevState.results, ...response.results],
+          }));
+        } else {
+          setBookmarks(response);
+        }
+      },
+    }
+  );
 
   if (isLoading) {
     return (
@@ -31,6 +60,20 @@ export default function BookMarks() {
             {bookmarks.results.map((bookmark) => (
               <BookmarkCard bookmark={bookmark} key={bookmark.id} />
             ))}
+            {isFetchingNextPage && (
+              <Center>
+                <Spinner size={"md"} color="gold-yellow" />
+              </Center>
+            )}
+            {bookmarks.nextPage && !isFetchingNextPage && (
+              <Button
+                alignSelf={"center"}
+                variant="primary"
+                onClick={() => setPage((prevState) => prevState + 1)}
+              >
+                Nächste Seite
+              </Button>
+            )}
           </Stack>
         </Container>
       </Box>

@@ -5,6 +5,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 WORKDIR /srv/app
 RUN pip install --upgrade pip
-COPY requirements.txt /srv/app/
+COPY requirements.txt ./
 RUN pip install -r requirements.txt
-COPY . .
+COPY ./ ./
+COPY ./cron/crontab /etc/cron.d/crontab
+RUN crontab /etc/cron.d/crontab
+

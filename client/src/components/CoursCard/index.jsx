@@ -36,7 +36,7 @@ export default function CoursCard({ cours }) {
     <Grid
       gridTemplateColumns={{
         base: "1fr",
-        md: "minmax(200px, 0.25fr) 1fr",
+        md: "minmax(200px, 0.15fr) 1fr",
       }}
       bg="light"
       rounded={"xl"}
@@ -49,8 +49,20 @@ export default function CoursCard({ cours }) {
           src={cours.logo?.image || "/Rectangle 14.png"}
           alt={cours.name}
           width="100%"
-          maxHeight="250px"
+          fallback={
+            <Image
+              src="/university_placeholder.png"
+              width="100%"
+              maxHeight="200px"
+              objectFit="contain"
+              objectPosition={"left"}
+              rounded="xl"
+            />
+          }
+          maxHeight="200px"
+          rounded="xl"
           objectFit="contain"
+          objectPosition={"left"}
         />
       </GridItem>
       <GridItem>

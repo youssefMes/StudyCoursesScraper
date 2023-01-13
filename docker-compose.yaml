@@ -24,6 +24,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./server:/srv/app
+      - ./server/static:/srv/app/static   
     environment:
       - POSTGRES_DB=db_name
       - POSTGRES_USER=db_user
@@ -42,6 +43,12 @@ services:
     ports:
       - 3000:3000
   
+  cron:
+    container_name: cs_cron
+    build: ./server
+    restart: unless-stopped
+    command: cron -f
+
   mailhog:
     image: mailhog/mailhog
     logging:

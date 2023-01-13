@@ -34,25 +34,32 @@ export default function Results() {
     isLoading,
     isFetching: isFetchingNextPage,
     isError,
+    isPreviousData
   } = useQuery(
     [search, page, study_forms, degrees, languages, cities, portals],
     () =>
       searchCourses({
-        study_forms: study_forms  ? study_forms.split(',') : undefined,
-        degrees: degrees ? degrees.split(',') : undefined,
-        languages: languages ? languages.split(',') : undefined,
-        cities: cities ? cities.split(','): undefined,
-        portals: portals ? portals.split(',') : undefined,
-        search: search ? search : '',
+        study_forms: study_forms ? study_forms.split(",") : undefined,
+        degrees: degrees ? degrees.split(",") : undefined,
+        languages: languages ? languages.split(",") : undefined,
+        cities: cities ? cities.split(",") : undefined,
+        portals: portals ? portals.split(",") : undefined,
+        search: search ? search : "",
+        page,
       }),
     {
       refetchOnWindowFocus: false,
       keepPreviousData: true,
       onSuccess: (response) => {
+        console.log('isPreviousData', isPreviousData);
         if (response.nextPage !== courses?.nextPage) {
+          if (isPreviousData) {
+            setCourses(response)
+            return
+          }
           setCourses((prevState) => ({
             ...response,
-            results: [...response.results],
+            results: [...prevState.results, ...response.results],
           }));
         } else {
           setCourses(response);
@@ -60,11 +67,11 @@ export default function Results() {
       },
     }
   );
-    useEffect(() => {
-      if (data) {
-        refetch()
-      }
-    }, [])
+  useEffect(() => {
+    if (data) {
+      refetch();
+    }
+  }, []);
   if (isLoading) {
     return (
       <ResultsLayout>
@@ -86,9 +93,9 @@ export default function Results() {
   return (
     <ResultsLayout>
       <Container maxW="8xl" mb="8">
-        <Text>{courses.count} Ergebnisse für</Text>
-        <Heading as="h1" color="secondary" fontWeight="normal" mb="8">
-          {search ?? "Ihre Suche"}
+        <Text>{courses.count} Ergebnisse {search && 'für'}</Text>
+        <Heading as="h1" color="secondary" fontWeight="normal" fontSize={'4xl'} mb="8">
+          {search ? search : ""}
         </Heading>
         <Stack spacing={6}>
           {courses.results.map((cours) => (

@@ -118,8 +118,8 @@ def filtersView(request):
             degrees.append(item['information__degree'])
         if item['information__languages']:
             for l in item['information__languages'].split(','):
-                if l not in languages:
-                    languages.append(l)
+                if l.strip() not in languages:
+                    languages.append(l.strip())
         if item['information__study_form']:
             for form in item['information__study_form'].split(','):
                 if not any(form in item for item in study_forms):
