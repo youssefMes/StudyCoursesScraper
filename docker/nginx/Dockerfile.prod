@@ -7,6 +7,10 @@ COPY ./client/yarn.lock ./
 RUN yarn
 RUN yarn rebuild esbuild
 COPY ./client/ ./
+ARG VITE_REACT_APP_API_URL
+
+ENV VITE_REACT_APP_API_URL $VITE_REACT_APP_API_URL
+
 RUN yarn build
 
 FROM nginx:stable-alpine
