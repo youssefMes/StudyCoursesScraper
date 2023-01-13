@@ -8,5 +8,8 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 3000,
   },
-  plugins: [react(), svgr()]
+  plugins: [react(), svgr()],
+  build: {
+    outDir: './build'
+  }
 })
