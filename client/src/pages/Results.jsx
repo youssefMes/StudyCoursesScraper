@@ -51,7 +51,6 @@ export default function Results() {
       refetchOnWindowFocus: false,
       keepPreviousData: true,
       onSuccess: (response) => {
-        console.log('isPreviousData', isPreviousData);
         if (response.nextPage !== courses?.nextPage) {
           if (isPreviousData) {
             setCourses(response)
