@@ -56,7 +56,7 @@ class History(models.Model):
 
 class Logo(models.Model):
     path = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='./scraperApp/static/', max_length=500, null=True)
+    image = models.ImageField(upload_to='./static/', max_length=500, null=True)
 
 
 class Course(models.Model):
