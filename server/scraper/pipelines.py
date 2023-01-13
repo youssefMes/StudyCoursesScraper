@@ -24,11 +24,11 @@ class ScraperPipeline(object):
             logging.log(logging.WARNING, 'Course {0} exists already! updating ...'.format(course.name))
             for key in item['information']:
                 setattr(course.information, key, item['information'][key])           
-                course.information.save() 
+                course.information.save()
             if 'comments' in item.keys():
                 entries = []
                 for comment in item['comments']:
-                    comment_record = Comment.objects.filter(title=comment['title'], course=course, course__information__university=course.information.university)
+                    comment_record = Comment.objects.filter(portal=portal, title=comment['title'], course=course, course__information__university=course.information.university)
                     if not comment_record.exists():
                         comment['course'] = course
                         comment['date'] = datetime.datetime.strptime(comment['date'], "%d.%m.%Y").strftime("%Y-%m-%d")
