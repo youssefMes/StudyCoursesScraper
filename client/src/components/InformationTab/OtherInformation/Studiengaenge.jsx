@@ -12,7 +12,7 @@ export default function Studiengaenge({ otherInformation }) {
       <When condition={applicationModus}>
         <GridItem>
           <InformationRow
-            title={"Application Modus"}
+            title={"Zulassungsmodus"}
             content={applicationModus}
             icon={HiOutlineInformationCircle}
           />
@@ -21,7 +21,7 @@ export default function Studiengaenge({ otherInformation }) {
       <When condition={coreAreas.length !== 0}>
         <GridItem>
           <InformationRow
-            title={"Core Areas"}
+            title={"Schwerpunkte"}
             content={coreAreas}
             isArray
             icon={HiOutlineInformationCircle}
@@ -31,7 +31,7 @@ export default function Studiengaenge({ otherInformation }) {
       <When condition={feeNote}>
         <GridItem>
           <InformationRow
-            title={"Fee Note"}
+            title={"Notizen zur Kosten"}
             content={feeNote}
             icon={HiOutlineInformationCircle}
           />
@@ -49,7 +49,7 @@ export default function Studiengaenge({ otherInformation }) {
       <When condition={periods.sommersemester}>
         <GridItem>
           <InformationRow
-            title={"Sommer Semester"}
+            title={"Sommersemester"}
             content={periods.sommersemester}
             icon={HiOutlineInformationCircle}
           />
@@ -58,7 +58,7 @@ export default function Studiengaenge({ otherInformation }) {
       <When condition={periods.wintersemester}>
         <GridItem>
           <InformationRow
-            title={"Winter Semester"}
+            title={"Wintersemester"}
             content={periods.wintersemester}
             icon={HiOutlineInformationCircle}
           />

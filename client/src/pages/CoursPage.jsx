@@ -44,8 +44,14 @@ export default function CoursPage() {
 
   if (isLoading) {
     return (
-      <Container maxW="7xl" minHeight={'100vh'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-        <Spinner size={'xl'} />
+      <Container
+        maxW="7xl"
+        minHeight={"100vh"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <Spinner size={"xl"} />
       </Container>
     );
   }
@@ -182,7 +188,7 @@ const InValidAlert = ({ invalidated_by, courseId }) => {
             Die Informationen wurden von{" "}
             <Text as="span" fontWeight={"bold"}>
               {invalidated_by?.first_name + " " + invalidated_by?.last_name}
-            </Text>
+            </Text>{" "}
             ungültig markiert
           </Text>
         </When>
@@ -230,7 +236,7 @@ const ValidAlert = ({ validated_by, courseId }) => {
     >
       <AlertIcon boxSize="40px" mr={0} />
       <AlertTitle mt={4} mb={1} fontSize="lg">
-        Informationen ungültich machen!
+        Informationen ungültig machen!
       </AlertTitle>
       <AlertDescription maxWidth="sm">
         <When condition={Boolean(validated_by)}>

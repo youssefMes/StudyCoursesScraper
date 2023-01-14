@@ -20,67 +20,67 @@ export default function InformationTab({ isStudyCheck, information, portal }) {
   const properties = useMemo(
     () => [
       {
-        title: "City",
+        title: "Standorte",
         content: information.city,
         icon: BiBuildings,
       },
       {
-        title: "University",
+        title: "Universität/Hochschule",
         content: information.university,
         icon: FaUniversity,
       },
       {
-        title: "Languages",
+        title: "Unterrichtssprachen",
         content: information.languages,
         icon: MdLanguage,
       },
       {
-        title: "Degree",
+        title: "Abschluss",
         content: information.degree,
         icon: IoSchoolOutline,
       },
       {
-        title: "Website",
+        title: "Link zur Website",
         content: information.website_link,
         icon: CgWebsite,
       },
       {
-        title: "Description",
+        title: "Beschreibung",
         content: information.description,
         icon: MdOutlineDescription,
       },
       {
-        title: "Credit Points",
+        title: "Leistungspunkte",
         content: information.credit_points,
         icon: AiOutlinePlusCircle,
       },
       {
-        title: "Costs",
+        title: "Kosten",
         content: information.costs,
         icon: MdOutlineAttachMoney,
       },
       {
-        title: "Study Periode",
+        title: "Regelstudienzeit",
         content: information.study_periode,
         icon: BiTime,
       },
       {
-        title: "Study Start",
+        title: "Studienbeginn",
         content: information.study_start,
         icon: BiTime,
       },
       {
-        title: "Study Form",
+        title: "Studienform",
         content: information.study_form,
         icon: CgTimelapse,
       },
       {
-        title: "Content",
+        title: "Inhalt",
         content: information.contents,
         icon: MdOutlineDescription,
       },
       {
-        title: "Requirements",
+        title: "Voraussetzungen",
         content: information.requirements,
         icon: BsListCheck,
       },

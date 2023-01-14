@@ -45,49 +45,49 @@ export default function InformationModels({ models }) {
                   <When condition={model.city}>
                     <InformationRow
                       content={model.city}
-                      title="City"
+                      title="Standorte"
                       icon={BiBuildings}
                     />
                   </When>
                   <When condition={model.credit_points}>
                     <InformationRow
                       content={model.credit_points}
-                      title="Credit Points"
+                      title="Leistungspunkte"
                       icon={AiOutlinePlusCircle}
                     />
                   </When>
                   <When condition={model.languages}>
                     <InformationRow
                       content={model.languages}
-                      title="Languages"
+                      title="Unterrichtssprachen"
                       icon={MdLanguage}
                     />
                   </When>
                   <When condition={model.price}>
                     <InformationRow
                       content={model.price}
-                      title="Price"
+                      title="Kosten"
                       icon={MdOutlineAttachMoney}
                     />
                   </When>
                   <When condition={model.study_start}>
                     <InformationRow
                       content={model.study_start}
-                      title="Study Start"
+                      title="Studienbeginn"
                       icon={BiTime}
                     />
                   </When>
                   <When condition={model.duration}>
                     <InformationRow
                       content={model.duration}
-                      title="Duration"
+                      title="Regelstudienzeit"
                       icon={BiTime}
                     />
                   </When>
                   <When condition={model.website_link}>
                     <InformationRow
                       content={model.website_link}
-                      title="Website"
+                      title="Link zur Webseite"
                       icon={CgWebsite}
                     />
                   </When>

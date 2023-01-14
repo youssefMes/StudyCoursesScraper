@@ -22,7 +22,7 @@ import CheckboxGroup from "../components/CheckboxGroup";
 import { fetchFilters } from "../services/filters";
 import { FaChevronDown } from "react-icons/fa";
 import { ReactComponent as BubbleMsg } from "../assets/bubble.svg";
-import desk from "../assets/desk.png";
+import desk from "../assets/desk.svg";
 import MultiSelect from "../components/MultiSelect";
 
 export default function LandingPage() {
@@ -187,17 +187,19 @@ export default function LandingPage() {
           </GridItem>
           <GridItem>
             <Stack spacing={4}>
-              <Heading fontWeight={"light"} maxW="md">
-                The one place to answer all your learning needs
+              <Heading fontSize={"3xl"} fontWeight={"light"} maxW="2xl">
+                Der einzige Ort, der Informationen und Bewertungen von
+                Studiengängen und Universitäten in Deutschland bietet.
               </Heading>
-              <Text maxW={"md"}>
-                Huge online learning and teaching marketplace with over 204000
-                courses and 54 million students. Learn programming, marketing,
-                data science and more.
+              <Text maxW={"2xl"}>
+                Hier können Studierende und Studieninteressierte verschiedene
+                Studiengänge und Hochschulen recherchieren, Bewertungen von
+                aktuellen und ehemaligen Studierenden lesen und verschiedene
+                Optionen vergleichen.
               </Text>
               <Link to="/register">
                 <Button variant={"primary"} alignSelf="flex-start">
-                  Join us for free
+                  Kostenlos registrieren
                 </Button>
               </Link>
             </Stack>
@@ -210,7 +212,7 @@ export default function LandingPage() {
           my="8"
         >
           <GridItem>
-            <Heading fontWeight={"light"}>Frequently asked questions</Heading>
+            <Heading fontWeight={"light"}>Häufig gestellte Fragen</Heading>
           </GridItem>
           <GridItem>
             <BubbleMsg />
