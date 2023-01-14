@@ -188,18 +188,18 @@ export default function LandingPage() {
           <GridItem>
             <Stack spacing={4}>
               <Heading fontSize={"3xl"} fontWeight={"light"} maxW="2xl">
-                Der einzige Ort, der Informationen und Bewertungen von
-                Studiengängen und Universitäten in Deutschland bietet.
+                Online-Plattform für Studiengangsbetreiber
               </Heading>
               <Text maxW={"2xl"}>
-                Hier können Studierende und Studieninteressierte verschiedene
-                Studiengänge und Hochschulen recherchieren, Bewertungen von
-                aktuellen und ehemaligen Studierenden lesen und verschiedene
-                Optionen vergleichen.
+                Studiengangsbetreiber (z. B. Universitäten, Hochschulen und
+                andere Bildungseinrichtungen) können auf einer Website zur
+                Überwachung von Informationen und Bewertungen über Studiengänge
+                verschiedene Aktivitäten durchführen, um ihre Studiengänge zu
+                verbessern
               </Text>
               <Link to="/register">
                 <Button variant={"primary"} alignSelf="flex-start">
-                  Kostenlos registrieren
+                  Registrieren
                 </Button>
               </Link>
             </Stack>
