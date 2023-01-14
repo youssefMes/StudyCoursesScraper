@@ -76,11 +76,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'coursesscraper.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'scraperApp/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -188,6 +187,9 @@ DJOSER = {
         "user_create_password_retype": "scraperApp.serializers.UserCreateSerializer",
         "current_user": "scraperApp.serializers.ExtendedUserSerializer",
     },
+    'EMAIL': {
+        'activation': 'scraperApp.email.ActivationEmail'
+    }
 }
 
 """ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
