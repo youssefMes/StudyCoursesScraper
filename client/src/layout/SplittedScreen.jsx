@@ -23,7 +23,7 @@ export default function SplitScreen({ title, children }) {
             position={"absolute"}
             leftIcon={<FaChevronLeft />}
           >
-            Home Page
+            Startseite
           </Button>
         </Link>
         <Image

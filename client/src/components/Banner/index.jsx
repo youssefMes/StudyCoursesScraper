@@ -3,18 +3,18 @@ import { useCallback } from "react";
 import { IoMdClose } from "react-icons/io";
 import { TbMoodSmile } from "react-icons/tb";
 
-export default function Banner({ type = "error" }) {
+export default function Banner({ type = "error", title = "Oops, etwas ist schief gelaufen!" }) {
   const showIcon = useCallback(() => {
     switch (type) {
       case "error":
         return {
           icon: <IoMdClose color={"white"} fontSize="3rem" />,
-          title: "Oops, something went wrong!",
+          title: title,
         };
       default:
         return {
           icon: <TbMoodSmile color={"white"} fontSize="3rem" />,
-          title: "Hey!",
+          title: "",
         };
     }
   }, [type]);
