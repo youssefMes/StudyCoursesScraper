@@ -13,6 +13,7 @@ export default function Activate() {
 
   const { mutateAsync, isError } = useMutation(activateAccount, {
     onSuccess: () => navigate("/login"),
+    onerror: (err) => console.log('errorr', err),
   });
 
   useEffect(() => {
