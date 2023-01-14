@@ -85,7 +85,7 @@ export default function CoursPage() {
             </GridItem>
             <GridItem rounded={"xl"}>
               <Image
-                src={cours.logo?.image || "/Rectangle 14.png"}
+                src={cours.logo?.image}
                 alt={cours.name}
                 fallback={
                   <Image

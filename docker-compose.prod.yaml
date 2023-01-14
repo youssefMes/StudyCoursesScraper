@@ -8,11 +8,14 @@ services:
             context: .
             dockerfile: ./docker/nginx/Dockerfile.prod
             args:
-                VITE_REACT_APP_API_URL: http://cs-studiengaenge.de:8000
+                VITE_REACT_APP_API_URL: https://cs-studiengaenge.de
         ports:
             - 80:80
+            - 443:443
         volumes:
             - ./server/static:/srv/app/static
+            - ./docker/nginx/certbot/conf:/etc/letsencrypt
+            - ./docker/nginx/certbot/www:/var/www/certbot
         depends_on: 
             - server
     server:
@@ -31,6 +34,17 @@ services:
         depends_on:
             postgres:
                 condition: service_healthy
+    certbot:
+        container_name: cs_certbot
+        image: certbot/certbot
+        restart: always
+        volumes:
+            - ./docker/nginx/certbot/conf:/etc/letsencrypt
+            - ./docker/nginx/certbot/www:/var/www/certbot
+        depends_on:
+            - nginx
+        command: certonly --webroot -w /var/www/certbot --register-unsafely-without-email --force-renewal -d cs-studiengaenge.de --agree-tos
+   
     postgres:
         container_name: cs_postgres
         image: postgres
@@ -47,3 +61,9 @@ services:
             interval: 5s
             timeout: 5s
             retries: 5
+    
+    cron:
+        container_name: cs_cron
+        build: ./server
+        restart: unless-stopped
+        command: cron -f
