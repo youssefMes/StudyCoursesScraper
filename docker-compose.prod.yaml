@@ -11,8 +11,11 @@ services:
                 VITE_REACT_APP_API_URL: http://cs-studiengaenge.de:8000
         ports:
             - 80:80
+            - 443:443
         volumes:
             - ./server/static:/srv/app/static
+            - ./docker/nginx/certbot/conf:/etc/letsencrypt
+            - ./docker/nginx/certbot/www:/var/www/certbot
         depends_on: 
             - server
     server:
@@ -23,8 +26,6 @@ services:
             dockerfile: Dockerfile.prod
         volumes:
             - ./server/static:/srv/app/static   
-            - ./docker/nginx/certbot/conf:/etc/letsencrypt
-            - ./docker/nginx/certbot/www:/var/www/certbot
         entrypoint: /srv/app/wsgi-entrypoint.sh
         ports:
             - 8000:8000
@@ -33,14 +34,17 @@ services:
         depends_on:
             postgres:
                 condition: service_healthy
-    
     certbot:
+        container_name: cs_certbot
         image: certbot/certbot
-        restart: unless-stopped
+        restart: always
         volumes:
             - ./docker/nginx/certbot/conf:/etc/letsencrypt
             - ./docker/nginx/certbot/www:/var/www/certbot
-        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+        depends_on:
+            - nginx
+        command: certonly --webroot -w /var/www/certbot --force-renewal  --staging -d cs-studiengaenge.de --agree-tos
+   
     postgres:
         container_name: cs_postgres
         image: postgres
