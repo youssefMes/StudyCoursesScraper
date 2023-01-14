@@ -43,7 +43,7 @@ services:
             - ./docker/nginx/certbot/www:/var/www/certbot
         depends_on:
             - nginx
-        command: certonly --webroot -w /var/www/certbot --register-unsafely-without-email --force-renewal  --staging -d cs-studiengaenge.de --agree-tos
+        command: certonly --webroot -w /var/www/certbot --register-unsafely-without-email --force-renewal -d cs-studiengaenge.de --agree-tos
    
     postgres:
         container_name: cs_postgres
