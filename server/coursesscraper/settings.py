@@ -26,18 +26,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-#o&ez_x_3=%r4de!ifzndz%m&!w^%nn6%@c%c68)vk8pk1sjao'
 
+
+
+ENV=env('ENV')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENV == 'dev'
 
 import logging
 if not DEBUG:
-    logging.getLogger('scrapy').propagate = False
-    logging.getLogger('urllib3').propagate = False
+    logging.getLogger('scrapy').setLevel(logging.ERROR)
+    logging.getLogger('urllib3').setLevel(logging.ERROR)
 
 
 
 #ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
-ALLOWED_HOSTS = ['cs-study-courses.online', 'localhost']
+ALLOWED_HOSTS = ['cs-studiengaenge.de', 'localhost']
 
 
 
@@ -73,11 +76,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'coursesscraper.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'scraperApp/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,7 +144,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 STATIC_URL = 'static/'
-#STATIC_ROOT = BASE_DIR / 'static/'
+STATIC_ROOT = BASE_DIR / 'django_static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -163,16 +165,10 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'scraperApp.User'
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost',
-    'http://localhost:3000',
-    'http://localhost:3001',
-]
-
 CORS_ALLOWED_ORIGINS = [
     'http://localhost',
     'http://localhost:3000',
-    'http://localhost:3001',
+    'http://cs-studiengaenge.de'
 ]
 
 SIMPLE_JWT = {
@@ -191,6 +187,9 @@ DJOSER = {
         "user_create_password_retype": "scraperApp.serializers.UserCreateSerializer",
         "current_user": "scraperApp.serializers.ExtendedUserSerializer",
     },
+    'EMAIL': {
+        'activation': 'scraperApp.email.ActivationEmail'
+    }
 }
 
 """ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

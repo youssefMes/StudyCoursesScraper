@@ -1,0 +1,20 @@
+{% block subject %}
+Account activation 
+{% endblock subject %}
+
+{% block text_body %}
+You're receiving this email because you need to finish activation process.
+
+Please go to the following page to activate account:
+<p><a href="{{ protocol }}://{{ host }}/{{ url|safe }}">{{ protocol }}://{{ host }}/{{ url|safe }}</a></p>
+
+{% endblock text_body %}
+
+{% block html_body %}
+{% with host="cs-studiengaenge.de" %}  
+<p>You're receiving this email because you need to finish activation process .</p>
+
+<p>Please go to the following page to activate account:</p>
+<p><a href="{{ protocol }}://{{ host }}/{{ url|safe }}">{{ protocol }}://{{ host }}/{{ url|safe }}</a></p>
+{% endwith %}
+{% endblock html_body %}

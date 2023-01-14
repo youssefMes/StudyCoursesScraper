@@ -4,7 +4,7 @@ client/node_modules
 data/
 scraper/*.json
 server/.scrapy/
-server/static
+server/**/static
 __pycache__/
 *.py[cod]
 # Django:
@@ -12,6 +12,7 @@ __pycache__/
 *.pot
 
 client/.pnp.*
+client/build
 client/.yarn/*
 !client/.yarn/patches
 !client/.yarn/plugins

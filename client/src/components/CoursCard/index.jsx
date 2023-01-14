@@ -46,7 +46,7 @@ export default function CoursCard({ cours }) {
     >
       <GridItem>
         <Image
-          src={cours.logo?.image || "/Rectangle 14.png"}
+          src={cours.logo?.image}
           alt={cours.name}
           width="100%"
           fallback={
