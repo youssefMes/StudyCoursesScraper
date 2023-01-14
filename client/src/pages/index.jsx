@@ -5,6 +5,8 @@ import Activate from "./Activate";
 import Login from "./Login";
 import Register from "./Register";
 import BookMarks from "./BookMarks";
+import PasswordReset from "./PasswordReset";
+import PasswordResetConfirmation from "./PasswordResetConfirmation";
 
 export {
   LandingPage,
@@ -14,4 +16,6 @@ export {
   Login,
   Register,
   BookMarks,
+  PasswordReset,
+  PasswordResetConfirmation
 };

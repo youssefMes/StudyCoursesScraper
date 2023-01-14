@@ -35,3 +35,19 @@ export const login = async (data) => {
     data,
   }).then((res) => res.data);
 };
+
+export const passworReset = async (data) => {
+  return await axiosInstance({
+    method: "post",
+    url: `/users/reset_password/`,
+    data,
+  }).then((res) => res.data);
+};
+
+export const passworResetConfirm = async (data) => {
+  return await axiosInstance({
+    method: "post",
+    url: `/users/reset_password_confirm/`,
+    data,
+  }).then((res) => res.data);
+};

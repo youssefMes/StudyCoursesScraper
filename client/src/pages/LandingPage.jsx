@@ -188,14 +188,11 @@ export default function LandingPage() {
           <GridItem>
             <Stack spacing={4}>
               <Heading fontSize={"3xl"} fontWeight={"light"} maxW="2xl">
-                Online-Plattform für Studiengangsbetreiber
+                Online-Platform für Studiengangsbetreiber
               </Heading>
               <Text maxW={"2xl"}>
-                Studiengangsbetreiber (z. B. Universitäten, Hochschulen und
-                andere Bildungseinrichtungen) können auf einer Website zur
-                Überwachung von Informationen und Bewertungen über Studiengänge
-                verschiedene Aktivitäten durchführen, um ihre Studiengänge zu
-                verbessern
+                Studiengangsbetreiber können hier Informationen und Bewertungen über Studiengänge 
+                aus verschiedenen Quellen ansehen und überprüfen
               </Text>
               <Link to="/register">
                 <Button variant={"primary"} alignSelf="flex-start">

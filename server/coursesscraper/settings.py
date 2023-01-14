@@ -180,7 +180,9 @@ DJOSER = {
     "USER_ID_FIELD": "id",
     "LOGIN_FIELD": "email",
     "USER_CREATE_PASSWORD_RETYPE": True,
-    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm?uid={uid}&token={token}",
+    "PASSWORD_RESET_CONFIRM_RETYPE": True,
+    "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True,
+    "PASSWORD_RESET_CONFIRM_URL": "reset-password-confirm?uid={uid}&token={token}",
     "ACTIVATION_URL": "activate?uid={uid}&token={token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SERIALIZERS": {
@@ -188,7 +190,8 @@ DJOSER = {
         "current_user": "scraperApp.serializers.ExtendedUserSerializer",
     },
     'EMAIL': {
-        'activation': 'scraperApp.email.ActivationEmail'
+        'activation': 'scraperApp.email.ActivationEmail',
+        'password_reset': 'scraperApp.email.PasswordResetEmail',
     }
 }
 

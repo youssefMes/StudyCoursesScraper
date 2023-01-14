@@ -65,6 +65,15 @@ export default function Login() {
           {registerFields.map((field) => (
             <Field {...field} key={field.name} />
           ))}
+          <Link to={'/reset-password'}>
+              <Button
+                variant="link"
+                textDecoration="underline"
+                disabled={isLoading}
+              >
+                Passwort zurücksetzen
+              </Button>
+            </Link>
           <Stack
             direction={{ base: "column", md: "row" }}
             justify="space-between"

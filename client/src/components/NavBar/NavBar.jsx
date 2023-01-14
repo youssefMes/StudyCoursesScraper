@@ -16,7 +16,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 const NavBar = ({ ...props }) => {
   const { isOpen, onToggle } = useDisclosure();
   const { pathname } = useLocation();
-  const pathnames = ["/register", "/login", "/activate"];
+  const pathnames = ["/register", "/login", "/activate", "/reset-password", "/reset-password-confirm"];
 
   if (!pathnames.includes(pathname)) {
     return (

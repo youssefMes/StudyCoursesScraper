@@ -8,6 +8,8 @@ import {
   Login,
   Register,
   BookMarks,
+  PasswordReset,
+  PasswordResetConfirmation
 } from "./pages/index";
 import AuthProvider, { useAuthProvider } from "./context/authProvider";
 
@@ -21,6 +23,8 @@ const App = () => {
           <Route path="search" element={<Results />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route path="reset-password" element={<PasswordReset />} />
+          <Route path="reset-password-confirm" element={<PasswordResetConfirmation />} />
           <Route path="activate" element={<Activate />} />
           <Route path="courses/:courseId" element={<CoursPage />} />
           <Route
