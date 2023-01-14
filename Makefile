@@ -5,7 +5,10 @@ start:
 	@make portals
 
 prod-start:
-	@docker-compose -f docker-compose.prod.yaml up -d --build
+	@docker-compose -f docker-compose.prod.yaml build
+	$(shell ./init-letsencrypt.sh )
+	@docker-compose -f docker-compose.prod.yaml down
+	@docker-compose -f docker-compose.prod.yaml up -d
 	@docker-compose exec server python manage.py migrate
 	@make portals
 
