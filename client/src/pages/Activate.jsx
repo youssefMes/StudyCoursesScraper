@@ -27,7 +27,6 @@ export default function Activate() {
   useEffect(() => {
     mutateAsync({ uid, token });
   }, []);
-  console.log({error});
   if (isError) {
     return (
       <>

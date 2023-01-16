@@ -183,7 +183,6 @@ const SidebarContent = ({ onClose, ...rest }) => {
               <GridItem key={group.name}>
                 <Heading as="h3" fontSize="lg" mb="3">
                   {group.name}
-                  {console.log('group.items', group.items)}
                 </Heading>
                 <MultiSelect
                   options={group.items.map((el) => ({
