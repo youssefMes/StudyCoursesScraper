@@ -67,3 +67,5 @@ services:
         build: ./server
         restart: unless-stopped
         command: cron -f
+        environment:
+            - ENV=prod
