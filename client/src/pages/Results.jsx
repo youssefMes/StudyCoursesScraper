@@ -32,7 +32,7 @@ export default function Results() {
   const { data, refetch } = useAuthProvider();
   const {
     isLoading,
-    isFetching: isFetchingNextPage,
+    isFetching,
     isError,
     isPreviousData
   } = useQuery(
@@ -51,18 +51,7 @@ export default function Results() {
       refetchOnWindowFocus: false,
       keepPreviousData: true,
       onSuccess: (response) => {
-        if (response.nextPage !== courses?.nextPage) {
-          if (isPreviousData) {
-            setCourses(response)
-            return
-          }
-          setCourses((prevState) => ({
-            ...response,
-            results: [...prevState.results, ...response.results],
-          }));
-        } else {
           setCourses(response);
-        }
       },
     }
   );
@@ -100,20 +89,32 @@ export default function Results() {
           {courses.results.map((cours) => (
             <CoursCard cours={cours} key={cours.id} />
           ))}
-          {isFetchingNextPage && (
+          {isFetching && (
             <Center>
               <Spinner size={"md"} color="gold-yellow" />
             </Center>
           )}
-          {courses.nextPage && !isFetchingNextPage && (
-            <Button
-              alignSelf={"center"}
-              variant="primary"
-              onClick={() => setPage((prevState) => prevState + 1)}
-            >
-              Nächste Seite
-            </Button>
-          )}
+          <Stack spacing={4} direction={['column', 'row']} justify={"center"}>
+            {courses.previousPage && !isFetching && (
+              <Button
+                alignSelf={"center"}
+                variant="primary"
+                onClick={() => setPage((prevState) => prevState - 1)}
+              >
+                Vorherige Seite
+              </Button>
+            )}
+            {courses.nextPage && !isFetching && (
+              <Button
+                alignSelf={"center"}
+                variant="primary"
+                onClick={() => setPage((prevState) => prevState + 1)}
+              >
+                Nächste Seite
+              </Button>
+            )}
+            <Text fontSize={"15px"}  align='center' orientation='vertical' style={{padding: "10px"}}>(Seite {page})</Text>
+          </Stack>
         </Stack>
       </Container>
     </ResultsLayout>

@@ -31,6 +31,7 @@ export const searchCourses = async ({
   return {
     results: response.data.results,
     nextPage: response.data.next,
+    previousPage: response.data.previous,
     count: response.data.count,
   };
 };
