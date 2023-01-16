@@ -26,6 +26,9 @@ class StudycheckSpider(Spider):
         'Creditpoints': 'credit_points',
         'Voraussetzungen': 'requirements'
     }
+    custom_settings = {
+        'DOWNLOAD_DELAY': 0.5,
+    }
     image = ''
     
     def parse(self, response):
