@@ -113,7 +113,9 @@ export default function Results() {
                 Nächste Seite
               </Button>
             )}
-            <Text fontSize={"15px"}  align='center' orientation='vertical' style={{padding: "10px"}}>(Seite {page})</Text>
+            {courses.results > 0 && (
+              <Text fontSize={"15px"}  align='center' orientation='vertical' style={{padding: "10px"}}>(Seite {page})</Text>
+            )}
           </Stack>
         </Stack>
       </Container>
