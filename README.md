@@ -1,1 +1,1 @@
-# Masterarbeit-CoursesScraper
+# StudyCoursesScraper
